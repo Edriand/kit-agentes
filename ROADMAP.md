@@ -10,6 +10,8 @@ la siguiente sin revisar lo aprendido.
 
 ## Fase 0 · Kit inicial ✅ (12-13 oct)
 
+- [x] v0.5: el kit no depende de ningún repo; las reglas de cada tarea salen del encargo y del repo.
+
 - [x] Principios de diseño extraídos de garage-backend, Nauty y coop-investment-fund, y revisados con Adrián.
 - [x] Skills de investigación, diseño (arquitectura, API, DynamoDB), implementación y revisión de CDK.
 - [x] Orquestador con 13 agentes y registro de tareas en `docs/tareas/`.
@@ -17,8 +19,8 @@ la siguiente sin revisar lo aprendido.
 
 ## Fase 1 · Repo y puesta en marcha (13-16 oct)
 
-- [ ] Adrián crea el repo privado `kit-agentes` y se sube el contenido de esta carpeta.
-- [ ] Instalar `uv` y comprobar que los servidores MCP conectan (`/mcp` dentro de Claude Code).
+- [x] Adrián crea el repo `kit-agentes` y se sube el contenido de esta carpeta (13 oct).
+- [x] Instalar `uv` y comprobar que los servidores MCP conectan (`/mcp` dentro de Claude Code) (13 oct).
 - [ ] Crear un perfil de AWS de **solo lectura** para los agentes (ej. `ReadOnlyAccess` más Cost Explorer)
       en la cuenta de coop-investment-fund.
 - [ ] Probar que el plugin carga: `claude --plugin-dir ~/work/kit-agentes` desde coop-investment-fund y
@@ -28,16 +30,18 @@ la siguiente sin revisar lo aprendido.
 
 ## Fase 2 · Piloto en coop-investment-fund (19-30 oct)
 
-Se usa la fase 6 del propio proyecto (agentes LLM), que está por empezar y es un caso real de diseño.
+Se usa la fase 6 del propio proyecto (agentes LLM): trabajo real que el proyecto necesita, con diseño ya escrito.
 
-- [ ] **Tarea A, solo diseño:** "Diseño de la fase 6 y ADR de los modelos de lenguaje". Pone a prueba al
-      pensador y la aprobación, que es la parte que más vale. Adrián compara el resultado con lo que habría
-      hecho él.
-- [ ] **Tarea B, flujo completo:** "Puerto LLM, claves del CEO y coste por llamada". De la petición al PR,
-      pasando por implementador, tester, revisor, documentador y entrega.
+- [ ] **Tarea A, solo diseño:** "Research con LLM" (§4 y fila 4 del §14 de `docs/diseno/fase6_agentes_llm.md`),
+      con el encargo que preparó el propio proyecto. El orquestador fija las reglas de la tarea y el pensador
+      contrasta el diseño con el código y propone el plan; se para en la aprobación. Pone a prueba al pensador
+      y la aprobación, que es la parte que más vale. Adrián compara el plan con lo que habría hecho él.
+- [ ] **Tarea B, flujo completo:** si el plan de la Tarea A se aprueba, la misma tarea sigue desde la
+      implementación hasta el PR, pasando por tester, revisor y documentador. El push y el PR, con el sí de
+      Adrián.
 - [ ] **Agentes periódicos:** una pasada de `seguridad` y otra de `costes` sobre la cuenta de coop (ya tiene
       etiquetas de coste y presupuesto).
-- [ ] Apuntar en cada tarea:
+- [ ] Apuntar en cada tarea (sección Métricas del registro):
   - Tiempo que ha dedicado Adrián y tiempo total.
   - Vueltas entre implementador y revisor.
   - Qué ha tenido que corregir Adrián y por qué.

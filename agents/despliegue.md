@@ -1,6 +1,6 @@
 ---
 name: despliegue
-description: Prepara el plan de despliegue de un cambio aprobado (orden, comprobaciones, riesgos y rollback) para que lo ejecute Adrián. Nunca despliega.
+description: Prepara el plan de despliegue de un cambio aprobado que haya que desplegar (orden, comprobaciones, riesgos y rollback) para que lo ejecute Adrián. Nunca despliega.
 model: sonnet
 ---
 

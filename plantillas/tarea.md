@@ -2,9 +2,10 @@
 
 - **Fecha de inicio:** {AAAA-MM-DD}
 - **Estado:** {Pensando | Esperando aprobación del diseño | Implementando | Probando | Revisando | Documentando | Esperando aprobación final | Comprobando entrega | Cerrada}
-- **Rama:** {agente/slug}
-- **ADR:** {enlace}
-- **Merge request:** {enlace}
+- **Modo:** {Completo | Solo diseño}
+- **Rama:** {rama}
+- **ADR:** {enlace o "no aplica"}
+- **PR o MR:** {enlace}
 
 ## Pasos
 
@@ -18,12 +19,27 @@
 | 6 | Revisión | revisor | | |
 | 7 | Documentación | documentador | | |
 | 8 | Plan de despliegue | despliegue | | |
-| 9 | Merge request | orquestador | | |
+| 9 | PR o MR (con el sí de Adrián) | orquestador | | |
 | 10 | Aprobación final y despliegue | Adrián | | |
 | 11 | Comprobación de entrega | entrega | | |
 | 12 | Comunicación al cliente | comunicacion | | |
 
 ## Petición
+
+## Reglas de la tarea
+
+| Regla | Valor | De dónde sale (encargo, repo, historial o por defecto) |
+|---|---|---|
+| Plataforma | | |
+| Rama | | |
+| Commits (formato, idioma, autor) | | |
+| Autoría | | |
+| Push, PR o MR | | |
+| Merge, tags, despliegues | | |
+| Comprobaciones | | |
+| Descripción del PR o MR | | |
+| Alcance y exclusiones | | |
+| Ficheros protegidos | | |
 
 ## Investigación y diseño
 
@@ -40,5 +56,15 @@
 ## Comprobación de entrega
 
 ## Comunicación
+
+## Métricas
+
+| Métrica | Valor |
+|---|---|
+| Tiempo de Adrián (minutos) | |
+| Tiempo total de la tarea | |
+| Vueltas implementar, probar y revisar | |
+| Correcciones de Adrián y por qué | |
+| Coste en tokens o dólares (`/cost` al terminar) | |
 
 ## Notas
