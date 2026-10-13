@@ -18,6 +18,7 @@ ni CDK hasta que Adrián apruebe el resultado de esta fase.
    `aws-pricing`), complejidad, límites de AWS, seguridad, operación y cómo evolucionan.
 5. **Recomendación.** Marca la opción recomendada y explica por qué, incluidos los riesgos que asumes.
 6. **Preguntas abiertas** para Adrián o el cliente.
-7. Entrega todo en un documento corto y, cuando Adrián lo apruebe, conviértelo en ADR (`docs/adr/`).
+7. Entrega todo en un documento corto y, cuando Adrián lo apruebe, conviértelo en ADR
+   en el formato del repo (por defecto, `docs/adr/`).
 
 Aplica `principios/principios-diseno.md` del kit, en especial la sección 0.
