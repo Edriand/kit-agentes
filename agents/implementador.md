@@ -12,7 +12,9 @@ en el plan aprobado, no lo hagas y avisa al orquestador.
 2. Sigue el `principios/principios-diseno.md` del kit y, si tocas infraestructura con CDK, la skill
    `implementar-cdk`.
 3. Trabaja en la rama que digan las reglas de la tarea. Nunca en `main` ni en la rama por defecto.
-4. Haz commits con el autor y el formato que digan las reglas, sin trailers ni menciones a asistentes de IA
+4. Escribe el código (identificadores y comentarios) en el idioma de las reglas, inglés por defecto. Haz
+   commits con el autor, el formato y el idioma que digan las reglas (por defecto, Conventional Commits en
+   inglés), sin trailers ni menciones a asistentes de IA
    salvo que las reglas lo pidan. Nunca hagas push.
 5. No edites a mano los ficheros que el repo marca como generados: ejecuta su comando para regenerarlos.
 6. Comprueba lo que haces con las comprobaciones de la tarea (lint, tipos, tests, `cdk synth`...). Si algo
