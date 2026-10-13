@@ -1,0 +1,98 @@
+# Roadmap del kit de agentes
+
+Objetivo: un equipo de agentes que diseña e implementa infraestructura AWS con el criterio de Adrián, que se
+pueda ofrecer a Dathum como servicio y después a otros clientes.
+
+Las fechas son estimaciones con 2 h/día de dedicación. Cada fase termina con un punto de control: no se pasa a
+la siguiente sin revisar lo aprendido.
+
+---
+
+## Fase 0 · Kit inicial ✅ (12-13 oct)
+
+- [x] Principios de diseño extraídos de garage-backend, Nauty y coop-investment-fund, y revisados con Adrián.
+- [x] Skills de investigación, diseño (arquitectura, API, DynamoDB), implementación y revisión de CDK.
+- [x] Orquestador con 13 agentes y registro de tareas en `docs/tareas/`.
+- [x] Servidores MCP de AWS en solo lectura.
+
+## Fase 1 · Repo y puesta en marcha (13-16 oct)
+
+- [ ] Adrián crea el repo privado `kit-agentes` y se sube el contenido de esta carpeta.
+- [ ] Instalar `uv` y comprobar que los servidores MCP conectan (`/mcp` dentro de Claude Code).
+- [ ] Crear un perfil de AWS de **solo lectura** para los agentes (ej. `ReadOnlyAccess` más Cost Explorer)
+      en la cuenta de coop-investment-fund.
+- [ ] Probar que el plugin carga: `claude --plugin-dir ~/work/kit-agentes` desde coop-investment-fund y
+      comprobar que aparecen las skills y los agentes.
+
+**Punto de control:** el kit se carga sin errores y los MCP responden.
+
+## Fase 2 · Piloto en coop-investment-fund (19-30 oct)
+
+Se usa la fase 6 del propio proyecto (agentes LLM), que está por empezar y es un caso real de diseño.
+
+- [ ] **Tarea A, solo diseño:** "Diseño de la fase 6 y ADR de los modelos de lenguaje". Pone a prueba al
+      pensador y la aprobación, que es la parte que más vale. Adrián compara el resultado con lo que habría
+      hecho él.
+- [ ] **Tarea B, flujo completo:** "Puerto LLM, claves del CEO y coste por llamada". De la petición al PR,
+      pasando por implementador, tester, revisor, documentador y entrega.
+- [ ] **Agentes periódicos:** una pasada de `seguridad` y otra de `costes` sobre la cuenta de coop (ya tiene
+      etiquetas de coste y presupuesto).
+- [ ] Apuntar en cada tarea:
+  - Tiempo que ha dedicado Adrián y tiempo total.
+  - Vueltas entre implementador y revisor.
+  - Qué ha tenido que corregir Adrián y por qué.
+  - Coste en tokens.
+
+**Punto de control:** lista de ajustes al kit. Pregunta clave: ¿el pensador razona como Adrián?
+
+Nota: coop es Python, Aurora y FastAPI, mientras que el kit nació de proyectos en TypeScript y DynamoDB. Es una
+buena prueba de que los principios no están atados a un stack. Las convenciones del `CLAUDE.md` de cada repo
+mandan sobre las generales del kit.
+
+## Fase 3 · Ajustes y segundo piloto (2-6 nov)
+
+- [ ] Corregir principios, skills y agentes con lo aprendido (kit v0.5).
+- [ ] Revisar la elección de modelo de cada agente según calidad y coste.
+- [ ] Segundo piloto corto en garage-backend (TypeScript y DynamoDB), para cubrir el stack de Dathum.
+- [ ] Resolver los **[CONFIRMAR]** que queden en los principios.
+
+**Punto de control:** dos tareas seguidas sin correcciones de fondo de Adrián.
+
+## Fase 4 · Preparación para Dathum (9-20 nov)
+
+- [ ] **Legal (bloqueante para cobrar):** revisar el contrato de Keepler/Accenture cuando llegue
+      (exclusividad, no competencia, conflicto de interés, propiedad intelectual).
+- [ ] Llevar el flujo a GitLab: merge requests con el MCP de GitLab o con `glab`, y pipeline de GitLab CI.
+- [ ] Rol de solo lectura en la cuenta de Dathum, entre cuentas y con ExternalId.
+- [ ] `CLAUDE.md` del kit en un repo de Dathum.
+- [ ] Definir con Dathum los casos de uso, la forma de trabajo y el precio (cuota mensual o bolsa de horas).
+      Las herramientas van a cargo de Dathum.
+
+**Punto de control:** acuerdo firmado con Dathum y vía libre legal.
+
+## Fase 5 · Piloto con Dathum (23 nov - 18 dic)
+
+- [ ] Un mes con 2 o 3 casos de uso, incluido al menos un diseño completo.
+- [ ] Informes periódicos de seguridad, costes y novedades.
+- [ ] Medir horas ahorradas, hallazgos y correcciones, y ajustar el precio.
+
+**Punto de control:** Dathum decide si continúa y con qué alcance.
+
+## Fase 6 · Producto para otros clientes (enero 2027)
+
+- [ ] Configuración por cliente: un fichero por cliente con stack, cuentas, repos y contactos.
+- [ ] Oferta tipo y caso de éxito de Dathum (con su permiso).
+- [ ] Elegir herramienta y producir vídeos con el agente `video`.
+- [ ] Guía de alta de un cliente nuevo.
+
+---
+
+## Riesgos
+
+| Riesgo | Mitigación |
+|---|---|
+| El contrato con Keepler/Accenture lo impide o lo limita | Revisarlo antes de cobrar; mientras tanto, el trabajo es sobre proyectos propios. |
+| Los agentes no razonan como Adrián | Los pilotos de las fases 2 y 3 sirven para medirlo antes de llegar a Dathum. |
+| 2 h/día no alcanzan para revisar todo | El orquestador concentra las decisiones en dos aprobaciones por tarea; medir el tiempo real en los pilotos. |
+| Coste de tokens alto | Medirlo en los pilotos y ajustar el modelo de cada agente; lo paga Dathum. |
+| Datos sensibles del cliente | Acceso de solo lectura, nada se despliega sin Adrián, y sin secretos en prompts ni logs. |
