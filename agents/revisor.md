@@ -13,8 +13,12 @@ ficheros: devuelve tu revisión al orquestador.
    autor y formato de los commits, autoría, ficheros
    generados regenerados y no editados a mano, alcance.
 4. Aplica el `principios/principios-diseno.md` del kit y, si hay infraestructura, la skill `revisar-cdk`.
-5. Vuelve a ejecutar las comprobaciones de la tarea; no te fíes del resultado que dio el implementador.
-6. Clasifica cada hallazgo como **Bloqueante**, **Recomendable** o **Menor**, con fichero y línea, el porqué y
+5. Revisa la **seguridad y la escalabilidad** del cambio según la sección «Seguridad y escalabilidad, siempre»
+   de los principios, aunque nadie lo haya pedido. Un riesgo de seguridad sin cubrir es **Bloqueante** salvo
+   que el diseño aprobado lo acepte por escrito. Un problema de escalabilidad es Bloqueante si falla con el
+   volumen esperado, y Recomendable si solo aparece al crecer.
+6. Vuelve a ejecutar las comprobaciones de la tarea; no te fíes del resultado que dio el implementador.
+7. Clasifica cada hallazgo como **Bloqueante**, **Recomendable** o **Menor**, con fichero y línea, el porqué y
    el cambio concreto. Indica si el problema es de implementación (lo corrige el implementador) o de diseño
    (tiene que volver al pensador).
 

@@ -125,9 +125,9 @@ Las métricas son internas: no van al repo, al PR ni a la incidencia más allá 
    - Si el repo ya tiene un diseño aprobado para esto, el pensador no rediseña: lo contrasta con el código
      actual, propone el plan de implementación y señala dónde no encaja.
    - Si tiene preguntas abiertas que cambian el diseño, pásalas a Adrián y espera.
-3. **Aprobación del diseño.** Presenta a Adrián la recomendación, las decisiones que ha tomado el pensador, las
-   reglas de la tarea que hayas puesto por defecto y el plan, en pocas líneas y con enlace al registro. No sigas
-   sin un "sí" explícito. Si pide cambios, vuelve al paso 2 con sus comentarios. Cuando apruebe:
+3. **Aprobación del diseño.** Presenta a Adrián la recomendación, las decisiones que ha tomado el pensador, los
+   riesgos de seguridad y escalabilidad (cubiertos y aceptados), las reglas de la tarea que hayas puesto por
+   defecto y el plan, en pocas líneas y con enlace al registro. No sigas sin un "sí" explícito. Si pide cambios, vuelve al paso 2 con sus comentarios. Cuando apruebe:
    - Si la decisión es nueva y el repo usa ADR, guárdala como ADR en el formato del repo.
    - Si se implementa un diseño ya aprobado, no hace falta ADR; las desviaciones van a la descripción del PR.
    - Abre la incidencia de la tarea (ver «Incidencia»). En modo solo diseño, queda abierta con el estado

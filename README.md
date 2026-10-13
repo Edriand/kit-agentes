@@ -40,8 +40,13 @@ Cada tarea queda además registrada en el gestor de incidencias del repo (GitHub
 defecto) con una ficha completa: urgencia, estimación y tiempo real, coste, etiquetas, recursos, documentos y
 personas implicadas. Se abre con el sí del diseño y se cierra con el merge.
 
-Para lanzarlo, dentro de Claude Code: "orquesta esta tarea: ...". Para parar después del diseño: "orquesta esta
-tarea en modo solo diseño: ...".
+Para lanzarlo, abre Claude Code con el kit (`claude --plugin-dir ~/work/kit-agentes`) y escribe
+`/kit-adrian-aws:orquestar` seguido de la tarea. Para parar después del diseño, empieza la tarea con «Modo solo
+diseño.». Una sesión abierta sin `--plugin-dir` no tiene el kit.
+
+Todos los agentes piensan en la **seguridad y la escalabilidad** de lo que hacen aunque la tarea no lo pida: el
+pensador las analiza en el diseño, el implementador las aplica, el tester las prueba y el revisor bloquea los
+riesgos sin cubrir. El criterio está en `principios/principios-diseno.md`.
 
 ## Sirve para cualquier repo
 

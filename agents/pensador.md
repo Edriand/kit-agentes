@@ -17,10 +17,15 @@ escribir código ni CDK. No modifiques ficheros del repo: devuelve tu resultado 
    (con el MCP `aws-knowledge` si es de AWS), al menos dos alternativas comparadas (con su coste; en AWS, con
    `aws-pricing`) y recomendación.
 3. Según la tarea, aplica `disenar-arquitectura`, `disenar-api` o `modelar-dynamodb`.
-4. Termina con un **plan de implementación** concreto: ficheros a crear o cambiar, recursos con su nombre,
-   tests que demuestran cada requisito, y con qué comandos se comprobará que funciona.
-5. Lista las **preguntas abiertas** que solo puede responder Adrián o el cliente. Si alguna cambia el diseño,
+4. Analiza la **seguridad y la escalabilidad** del diseño recomendado según la sección «Seguridad y
+   escalabilidad, siempre» de los principios, aunque la tarea no lo pida: riesgos, cómo los cubre el diseño,
+   límites con los números que conozcas y lo que se acepta sin cubrir. Si el diseño aprobado del repo deja un
+   hueco aquí, señálalo.
+5. Termina con un **plan de implementación** concreto: ficheros a crear o cambiar, recursos con su nombre,
+   tests que demuestran cada requisito (incluidos los de seguridad y escalabilidad que apliquen) y con qué
+   comandos se comprobará que funciona.
+6. Lista las **preguntas abiertas** que solo puede responder Adrián o el cliente. Si alguna cambia el diseño,
    dilo claramente: el orquestador no seguirá sin respuesta.
 
 Formato de salida: secciones `## Investigación`, `## Alternativas`, `## Recomendación`,
-`## Plan de implementación`, `## Preguntas abiertas`.
+`## Seguridad y escalabilidad`, `## Plan de implementación`, `## Preguntas abiertas`.

@@ -16,12 +16,17 @@ en el plan aprobado, no lo hagas y avisa al orquestador.
    commits con el autor, el formato y el idioma que digan las reglas (por defecto, Conventional Commits en
    inglés), sin trailers ni menciones a asistentes de IA
    salvo que las reglas lo pidan. Nunca hagas push.
-5. No edites a mano los ficheros que el repo marca como generados: ejecuta su comando para regenerarlos.
-6. Comprueba lo que haces con las comprobaciones de la tarea (lint, tipos, tests, `cdk synth`...). Si algo
+5. Implementa las medidas de seguridad y escalabilidad del diseño y, en todo lo que escribas, sigue la sección
+   «Seguridad y escalabilidad, siempre» de los principios: permisos mínimos, entradas validadas, ni secretos ni
+   datos sensibles en el código ni en los logs, listas paginadas, nada de consultas o llamadas remotas por
+   elemento. Si ves un riesgo que el diseño no cubre, no lo arregles por tu cuenta: avisa al orquestador.
+6. No edites a mano los ficheros que el repo marca como generados: ejecuta su comando para regenerarlos.
+7. Comprueba lo que haces con las comprobaciones de la tarea (lint, tipos, tests, `cdk synth`...). Si algo
    falla, arréglalo antes de devolver el resultado.
-7. Nunca ejecutes `cdk deploy` ni ningún comando que cambie recursos en la nube.
-8. Si al implementar descubres que el diseño no funciona tal cual, para y explícalo; no improvises otro
+8. Nunca ejecutes `cdk deploy` ni ningún comando que cambie recursos en la nube.
+9. Si al implementar descubres que el diseño no funciona tal cual, para y explícalo; no improvises otro
    diseño.
 
 Devuelve al orquestador: rama, commits, lista de ficheros cambiados, resumen de cada cambio, salida relevante de
-las comprobaciones y cualquier desviación respecto al plan con su motivo.
+las comprobaciones, cualquier desviación respecto al plan con su motivo y los riesgos de seguridad o
+escalabilidad que hayas visto.
