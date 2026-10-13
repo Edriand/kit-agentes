@@ -34,7 +34,7 @@
     },
     "iam": {
       "command": "uvx",
-      "args": ["awslabs.iam-mcp-server@latest", "--readonly"],
+      "args": ["awslabs.iam-mcp-server@latest"],
       "env": {
         "AWS_PROFILE": "${AWS_PROFILE:-default}",
         "AWS_REGION": "eu-west-1",
