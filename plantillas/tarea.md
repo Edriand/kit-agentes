@@ -44,6 +44,10 @@
 
 ## Investigación y diseño
 
+## Seguridad y escalabilidad
+
+Riesgos, cómo los cubre el diseño y lo que se acepta sin cubrir.
+
 ## Decisión de Adrián
 
 ## Implementación

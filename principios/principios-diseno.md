@@ -22,11 +22,31 @@ Es lo que más se valora del trabajo de Adrián y lo primero que tiene que respe
   - Qué se quiere conseguir y qué restricciones hay (volumen, quién usa el sistema, datos sensibles, coste).
   - Lo que ya existe en el repo y en la cuenta y que condiciona la decisión.
   - **Al menos dos alternativas reales**, comparadas en una tabla (coste, complejidad, límites de AWS,
-    seguridad, cómo evoluciona), con la recomendada marcada y el porqué.
+    seguridad, escalabilidad, cómo evoluciona), con la recomendada marcada y el porqué.
   - Lo que se ha comprobado en documentación oficial (MCP `aws-knowledge`) y no se ha dado por supuesto.
   - Las preguntas que solo puede responder Adrián o el cliente.
 - **Si falta información que cambia el diseño, se pregunta; no se inventa.**
 - La investigación y la decisión quedan escritas en un ADR antes de implementar.
+
+### Seguridad y escalabilidad, siempre
+
+Regla de Adrián (2026-10-13): todo agente que diseña, implementa, prueba o revisa piensa en la seguridad y la
+escalabilidad de lo que hace, aunque la tarea no lo mencione. Sirve para cualquier repo y cualquier tecnología;
+las secciones 5 y 6 concretan cómo se aplica en AWS.
+
+- **Seguridad.** Quién puede usar esto y con qué permisos (mínimo privilegio). Qué entradas acepta y cómo se
+  validan (inyección, tamaños, tipos). Qué datos sensibles maneja y dónde pueden acabar (logs, errores,
+  respuestas, prompts de un LLM). Secretos fuera del código y del repo. Aislamiento entre usuarios, clientes o
+  entornos. Dependencias nuevas (mantenidas, versión fijada). Qué pasa si alguien lo usa mal (abuso, límites,
+  coste disparado).
+- **Escalabilidad.** Qué pasa con 10 y con 100 veces el volumen de hoy (datos, peticiones, usuarios). Límites y
+  cuotas del servicio (concurrencia, timeouts, tamaño de payload, throughput, conexiones a la base de datos).
+  Patrones que no escalan: scans o consultas sin índice, N+1, una llamada remota por elemento, listas sin
+  paginar, cargar todo en memoria, particiones calientes. Reintentos e idempotencia. Cómo crece el coste.
+- **Proporcional al cambio.** Un script interno no necesita lo mismo que una API pública. Si un punto no aplica,
+  se dice en una línea; no se omite en silencio.
+- **Lo que se deja fuera a propósito se escribe como riesgo aceptado**, con el porqué, para que lo decida Adrián.
+- El agente `seguridad` hace auditorías a fondo aparte; esta regla es el mínimo de cada tarea.
 
 ## 1. Forma de trabajar
 
