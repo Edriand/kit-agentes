@@ -1,0 +1,54 @@
+{
+  "mcpServers": {
+    "aws-knowledge": {
+      "type": "http",
+      "url": "https://knowledge-mcp.global.api.aws"
+    },
+    "aws-iac": {
+      "command": "uvx",
+      "args": ["awslabs.aws-iac-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE:-default}",
+        "AWS_REGION": "eu-west-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "aws-serverless": {
+      "command": "uvx",
+      "args": ["awslabs.aws-serverless-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE:-default}",
+        "AWS_REGION": "eu-west-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "dynamodb": {
+      "command": "uvx",
+      "args": ["awslabs.dynamodb-mcp-server@latest"],
+      "env": {
+        "DDB-MCP-READONLY": "true",
+        "AWS_PROFILE": "${AWS_PROFILE:-default}",
+        "AWS_REGION": "eu-west-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "iam": {
+      "command": "uvx",
+      "args": ["awslabs.iam-mcp-server@latest", "--readonly"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE:-default}",
+        "AWS_REGION": "eu-west-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "aws-pricing": {
+      "command": "uvx",
+      "args": ["awslabs.aws-pricing-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE:-default}",
+        "AWS_REGION": "eu-west-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+}
