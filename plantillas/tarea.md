@@ -5,6 +5,7 @@
 - **Modo:** {Completo | Solo diseño}
 - **Rama:** {rama}
 - **ADR:** {enlace o "no aplica"}
+- **Incidencia:** {enlace}
 - **PR o MR:** {enlace}
 
 ## Pasos
@@ -65,6 +66,6 @@
 | Tiempo total de la tarea | |
 | Vueltas implementar, probar y revisar | |
 | Correcciones de Adrián y por qué | |
-| Coste en tokens o dólares (`/cost` al terminar) | |
+| Coste a precio de API y tokens (de `.agentes/metricas/`) | |
 
 ## Notas

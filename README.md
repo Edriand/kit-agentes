@@ -36,6 +36,10 @@ El orquestador lleva el registro de cada paso en `.agentes/tareas/{fecha}-{tarea
 de git con `.git/info/exclude` para que no acabe en ningún commit (salvo que el repo pida versionarlo). Ningún
 agente hace push sin el sí de Adrián, ni fusiona, ni despliega.
 
+Cada tarea queda además registrada en el gestor de incidencias del repo (GitHub Issues o GitLab Issues por
+defecto) con una ficha completa: urgencia, estimación y tiempo real, coste, etiquetas, recursos, documentos y
+personas implicadas. Se abre con el sí del diseño y se cierra con el merge.
+
 Para lanzarlo, dentro de Claude Code: "orquesta esta tarea: ...". Para parar después del diseño: "orquesta esta
 tarea en modo solo diseño: ...".
 
@@ -68,6 +72,8 @@ en un repo de Dathum con GitLab y CDK en TypeScript, o en uno propio con GitHub 
 | `skills/implementar-cdk` | Convenciones para implementar en CDK y Lambda. |
 | `ideas/catalogo-agentes.md` | Lista priorizada de agentes futuros. |
 | `plantillas/tarea.md` | Plantilla del registro de cada tarea, con sus reglas y métricas. |
+| `skills/orquestar/scripts/metricas_sesion.py` | Exporta las métricas de la sesión (tiempos, mensajes, tokens, coste a precio de API) a `.agentes/metricas/`. |
+| `plantillas/incidencia.md` | Ficha de la incidencia de cada tarea y cómo se guarda en GitHub, GitLab, Jira o Linear. |
 | `ROADMAP.md` | Fases, pilotos y puntos de control hasta llevarlo a Dathum y a otros clientes. |
 | `principios/principios-diseno.md` | El criterio de diseño. Es lo que hace que los agentes diseñen como Adrián. |
 | `skills/investigar` | Fase obligatoria antes de diseñar o programar: alternativas comparadas y documentación comprobada. |

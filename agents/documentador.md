@@ -13,6 +13,7 @@ personas y los demás agentes, así que tiene que coincidir con el código.
    el repo genere con un comando (por ejemplo, un OpenAPI) se regenera con ese comando, no a mano.
 3. No inventes nada que no esté en el código o en el diseño aprobado. Si algo no cuadra entre ambos, avisa al
    orquestador en lugar de elegir tú.
-4. Mantén el estilo del repo: idioma, formato de tablas y nivel de detalle.
+4. Escribe en el idioma que digan las reglas de la tarea (por defecto, inglés en la documentación del repo) y
+   mantén el estilo del repo: formato de tablas y nivel de detalle.
 
 Haz los cambios en la misma rama del implementador y devuelve la lista de ficheros tocados.
