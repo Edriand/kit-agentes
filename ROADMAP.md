@@ -23,7 +23,7 @@ la siguiente sin revisar lo aprendido.
 - [x] Instalar `uv` y comprobar que los servidores MCP conectan (`/mcp` dentro de Claude Code) (13 oct).
 - [ ] Crear un perfil de AWS de **solo lectura** para los agentes (ej. `ReadOnlyAccess` más Cost Explorer)
       en la cuenta de coop-investment-fund.
-- [ ] Probar que el plugin carga: `claude --plugin-dir ~/work/kit-agentes` desde coop-investment-fund y
+- [x] Probar que el plugin carga: `claude --plugin-dir ~/work/kit-agentes` desde coop-investment-fund y
       comprobar que aparecen las skills y los agentes.
 
 **Punto de control:** el kit se carga sin errores y los MCP responden.
@@ -32,13 +32,15 @@ la siguiente sin revisar lo aprendido.
 
 Se usa la fase 6 del propio proyecto (agentes LLM): trabajo real que el proyecto necesita, con diseño ya escrito.
 
-- [ ] **Tarea A, solo diseño:** "Research con LLM" (§4 y fila 4 del §14 de `docs/diseno/fase6_agentes_llm.md`),
+- [x] **Tarea A, solo diseño:** "Research con LLM" (§4 y fila 4 del §14 de `docs/diseno/fase6_agentes_llm.md`),
       con el encargo que preparó el propio proyecto. El orquestador fija las reglas de la tarea y el pensador
       contrasta el diseño con el código y propone el plan; se para en la aprobación. Pone a prueba al pensador
       y la aprobación, que es la parte que más vale. Adrián compara el plan con lo que habría hecho él.
-- [ ] **Tarea B, flujo completo:** si el plan de la Tarea A se aprueba, la misma tarea sigue desde la
+- [x] **Tarea B, flujo completo:** si el plan de la Tarea A se aprueba, la misma tarea sigue desde la
       implementación hasta el PR, pasando por tester, revisor y documentador. El push y el PR, con el sí de
-      Adrián.
+      Adrián. Hecho el 13 oct: PR #86 (36,43 USD). Datos en `pilotos/coop-research-llm/`.
+- [x] **Segunda tarea:** `research_debate`, ya con incidencia (#87) y métricas: PR #88 fusionado (17,31 USD).
+      Datos en `pilotos/coop-research-debate/`.
 - [ ] **Agentes periódicos:** una pasada de `seguridad` y otra de `costes` sobre la cuenta de coop (ya tiene
       etiquetas de coste y presupuesto).
 - [ ] Apuntar en cada tarea (sección Métricas del registro):
@@ -69,6 +71,11 @@ mandan sobre las generales del kit.
 - [ ] Llevar el flujo a GitLab: merge requests con el MCP de GitLab o con `glab`, y pipeline de GitLab CI.
 - [ ] Rol de solo lectura en la cuenta de Dathum, entre cuentas y con ExternalId.
 - [ ] `CLAUDE.md` del kit en un repo de Dathum.
+- [ ] **Perfil de cliente por ficheros** (ver `ideas/producto.md`): `~/work/clientes/dathum/` con las
+      herramientas de cada agente (documentación en Outline con API key, tareas en su tablero de GitLab con
+      `glab`, incidencias en su app propia) y su `.mcp.json`. El orquestador lo lee en el paso 0. Secretos solo
+      en variables de entorno o en el llavero.
+- [ ] Poder usar el kit desde el portátil de la empresa.
 - [ ] Definir con Dathum los casos de uso, la forma de trabajo y el precio (cuota mensual o bolsa de horas).
       Las herramientas van a cargo de Dathum.
 
@@ -84,10 +91,27 @@ mandan sobre las generales del kit.
 
 ## Fase 6 · Producto para otros clientes (enero 2027)
 
-- [ ] Configuración por cliente: un fichero por cliente con stack, cuentas, repos y contactos.
+- [ ] Perfil por cliente (el de la fase 4) con stack, cuentas, repos, contactos y herramientas.
 - [ ] Oferta tipo y caso de éxito de Dathum (con su permiso).
 - [ ] Elegir herramienta y producir vídeos con el agente `video`.
 - [ ] Guía de alta de un cliente nuevo.
+
+## Fase 7 · Plataforma multiempresa (2027, solo si hay más clientes)
+
+Detalle y términos de uso en `ideas/producto.md`.
+
+- [ ] **Legal antes de empezar:** que el contrato con Keepler/Accenture permita un producto propio.
+- [ ] Backend serverless: organizaciones, configuración por agente y secretos de cada cliente en Secrets
+      Manager con KMS, más auditoría.
+- [ ] **Ejecución remota:** un contenedor por tarea que clona los repos del cliente con un token de alcance
+      mínimo y corre el kit. El modelo lo paga el cliente con su API key o con Bedrock en su cuenta (rol entre
+      cuentas). **Nunca con su suscripción de Claude: los términos de Anthropic lo prohíben.**
+- [ ] Aprobaciones desde la web o el chat.
+
+## Fase 8 · Frontend y pagos (después de la fase 7)
+
+- [ ] Frontend para el alta, la configuración, las tareas y las aprobaciones.
+- [ ] Stripe Billing con cuota por organización o por tarea. Se cobra el servicio, nunca los tokens.
 
 ---
 
@@ -99,4 +123,6 @@ mandan sobre las generales del kit.
 | Los agentes no razonan como Adrián | Los pilotos de las fases 2 y 3 sirven para medirlo antes de llegar a Dathum. |
 | 2 h/día no alcanzan para revisar todo | El orquestador concentra las decisiones en dos aprobaciones por tarea; medir el tiempo real en los pilotos. |
 | Coste de tokens alto | Medirlo en los pilotos y ajustar el modelo de cada agente; lo paga Dathum. |
+| Términos de Anthropic al ejecutar para clientes | Solo la API key o el proveedor de nube del cliente; nunca su suscripción de Claude. |
+| Custodiar credenciales y código de clientes en una plataforma | Credenciales de alcance mínimo y que caducan, KMS por cliente, contenedores efímeros y auditoría. |
 | Datos sensibles del cliente | Acceso de solo lectura, nada se despliega sin Adrián, y sin secretos en prompts ni logs. |
