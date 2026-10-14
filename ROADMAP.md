@@ -68,7 +68,8 @@ mandan sobre las generales del kit.
 - [x] **Menos consumo, grupo A** (14 oct, `kit-agentes-consumo/propuestas.md`): un implementador nuevo por
       vuelta, informes de cada agente en fichero, principios partidos por tema y solo la sección del diseño que
       toca, salidas cortas, esfuerzo por agente, retomar con `/clear` tras esperas largas y sin MCP en los
-      agentes que no lo usan.
+      agentes que no lo usan. Añadido A8 tras el `/usage` de Adrián (el documentador era el 17 %): recibe el
+      diff, toca solo lo afectado y lleva `effort: low`.
 - [ ] **Menos consumo, grupo B, en prueba en la próxima tarea:** orquestador en Sonnet
       (`claude --model sonnet --plugin-dir ...`), revisor sin repetir las suites largas y re-revisión sobre el
       delta. Comparar coste por agente, contexto medio por llamada y calidad con los dos pilotos (sección 3 de
