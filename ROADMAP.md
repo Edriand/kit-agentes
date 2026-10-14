@@ -43,6 +43,9 @@ Se usa la fase 6 del propio proyecto (agentes LLM): trabajo real que el proyecto
       Datos en `pilotos/coop-research-debate/`.
 - [ ] **Agentes periódicos:** una pasada de `seguridad` y otra de `costes` sobre la cuenta de coop (ya tiene
       etiquetas de coste y presupuesto).
+- [x] **Métricas exactas en local** (14 oct): `lanzar.sh` con un receptor de telemetría en el equipo. Arregla la
+      salida de los subagentes infravalorada (un 15-16 %), la cifra oficial solo tras `/exit` y el slug a mano.
+      Probado con un kit de prueba; falta confirmarlo en la próxima tarea real comparando con `/cost`.
 - [ ] Apuntar en cada tarea (sección Métricas del registro):
   - Tiempo que ha dedicado Adrián y tiempo total.
   - Vueltas entre implementador y revisor.
@@ -74,7 +77,7 @@ mandan sobre las generales del kit.
       el tester, porque la de 5 minutos caducaba durante la suite de Jest; y la wiki se publica en una sola
       llamada con un script que redacta el documentador, no el orquestador.
 - [ ] **Menos consumo, grupo B, en prueba en la próxima tarea:** orquestador en Sonnet
-      (`claude --model sonnet --plugin-dir ...`), revisor sin repetir las suites largas y re-revisión sobre el
+      (`lanzar.sh {tarea} --model sonnet`), revisor sin repetir las suites largas y re-revisión sobre el
       delta. Comparar coste por agente, contexto medio por llamada y calidad con los dos pilotos (sección 3 de
       `propuestas.md`). Si la calidad baja, se quita lo que la baje.
 - [x] **Menos esperas:** en la #88, la mitad de la sesión fue esperar a Adrián. Decidido el 14 oct: los agentes
