@@ -107,6 +107,9 @@ Detalle y términos de uso en `ideas/producto.md`.
       mínimo y corre el kit. El modelo lo paga el cliente con su API key o con Bedrock en su cuenta (rol entre
       cuentas). **Nunca con su suscripción de Claude: los términos de Anthropic lo prohíben.**
 - [ ] Aprobaciones desde la web o el chat.
+- [ ] **Métricas e insights centralizados:** cada tarea guarda sola su coste exacto (sale de la respuesta de la
+      API), tiempos, vueltas de revisión y correcciones de Adrián. Panel por cliente y por agente para ajustar
+      modelos, precios y principios.
 
 ## Fase 8 · Frontend y pagos (después de la fase 7)
 

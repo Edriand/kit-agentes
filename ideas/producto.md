@@ -62,6 +62,10 @@ Diseño del ejecutor:
 - Corre Claude Code o el Agent SDK con el kit cargado desde nuestro disco.
 - Las aprobaciones de Adrián, o del cliente, llegan por web o por chat.
 - Al terminar, el contenedor se destruye.
+- **Métricas e insights:** al ejecutar nosotros, cada llamada devuelve su uso exacto. Desaparecen los límites
+  del script actual (salida de subagentes infravalorada, cifra oficial solo con `/exit`, métricas a mano). Con
+  todas las tareas en un sitio se ve el coste por cliente y por agente, dónde corrige Adrián y qué modelo
+  conviene a cada agente.
 - La documentación de hosting del Agent SDK cubre el aislamiento entre clientes:
   https://code.claude.com/docs/en/agent-sdk/hosting.md
 
