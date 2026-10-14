@@ -61,6 +61,12 @@ mandan sobre las generales del kit.
 - [ ] Revisar la elección de modelo de cada agente según calidad y coste.
 - [ ] Segundo piloto corto en garage-backend (TypeScript y DynamoDB), para cubrir el stack de Dathum.
 - [ ] Resolver los **[CONFIRMAR]** que queden en los principios.
+- [ ] **Una tarea web con el kit** (por ejemplo en coop-investment-fund-web). La comparativa con Kimi y Grok
+      (13 oct) no sabe cuánto de los buenos resultados es del kit y cuánto de la suite de tests del backend.
+- [ ] **El kit como revisor de PR ajenas:** que `revisor` revise una PR de Claude (por ejemplo, el PR 10 de la
+      película). En la #86 encontró un fallo en código de Claude que nadie había visto.
+- [ ] **Menos esperas:** en la #88, la mitad de la sesión fue esperar a Adrián. Decidir si los agentes siguen
+      con su recomendación en las decisiones reversibles y las dejan apuntadas para el PR.
 
 **Punto de control:** dos tareas seguidas sin correcciones de fondo de Adrián.
 
@@ -92,7 +98,9 @@ mandan sobre las generales del kit.
 ## Fase 6 · Producto para otros clientes (enero 2027)
 
 - [ ] Perfil por cliente (el de la fase 4) con stack, cuentas, repos, contactos y herramientas.
-- [ ] Oferta tipo y caso de éxito de Dathum (con su permiso).
+- [ ] Oferta tipo y caso de éxito de Dathum (con su permiso). Primer dato que se puede usar: la comparativa
+      del 13 oct (0 fallos en 2 PR, 1,65 líneas de test por línea de código, 100 % Conventional Commits, el
+      único que da su coste), con la reserva de que son solo 2 PR.
 - [ ] Elegir herramienta y producir vídeos con el agente `video`.
 - [ ] Guía de alta de un cliente nuevo.
 

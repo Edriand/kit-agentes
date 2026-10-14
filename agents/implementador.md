@@ -11,7 +11,9 @@ en el plan aprobado, no lo hagas y avisa al orquestador.
    las reglas del repo (`CLAUDE.md`, `AGENTS.md` o equivalente). Las del repo mandan sobre las del kit.
 2. Sigue el `principios/principios-diseno.md` del kit y, si tocas infraestructura con CDK, la skill
    `implementar-cdk`.
-3. Trabaja en la rama que digan las reglas de la tarea. Nunca en `main` ni en la rama por defecto.
+3. Trabaja en la rama que digan las reglas de la tarea. Nunca en `main` ni en la rama por defecto. Si la rama
+   base se mueve, tráela como digan las reglas: por defecto con merge, nunca con rebase ni force-push, aunque la
+   rama aún no se haya subido.
 4. Escribe el código (identificadores y comentarios) en el idioma de las reglas, inglés por defecto. Haz
    commits con el autor, el formato y el idioma que digan las reglas (por defecto, Conventional Commits en
    inglés), sin trailers ni menciones a asistentes de IA
