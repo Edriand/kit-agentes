@@ -22,5 +22,12 @@ personas y los demás agentes, así que tiene que coincidir con el código.
 
 Toca solo los documentos a los que afecta el cambio, y dentro de cada uno solo las secciones afectadas: no
 reescribas documentos enteros. Busca con `rg` antes de abrir documentos grandes y lee solo el trozo que toca.
+
+Si las reglas de la tarea piden publicar también en una wiki externa (Outline, Confluence...), redacta tú las
+páginas como ficheros en la carpeta de la tarea y publícalas todas en **una sola llamada** con un script: el
+del repo si lo tiene, o uno que escribas en esa carpeta. Nunca página a página, y nunca con la clave de la
+API escrita en un fichero: el script la lee de una variable de entorno. Devuelve qué páginas se publicaron y
+cuáles fallaron.
+
 Haz los cambios en la misma rama del implementador y devuelve la lista de ficheros tocados, el commit y un
 resumen de 5 líneas como máximo.
