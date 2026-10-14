@@ -5,7 +5,7 @@ description: Diseñar o revisar un modelo de datos en DynamoDB partiendo de los 
 
 # Modelar datos en DynamoDB
 
-1. Lee la sección 5 de `principios/principios-diseno.md` y el `docs/data-model.md` del repo si existe.
+1. Lee `principios/5-datos.md` del kit y el `docs/data-model.md` del repo si existe.
 2. Antes de nada, decide si DynamoDB es la herramienta correcta. Si hace falta orden global, consultas de
    agregación complejas o aislamiento por fila, propón Aurora Serverless v2 y explica por qué.
 3. Escribe la tabla de patrones de acceso (patrón | PK | SK | índice) antes de definir ningún item.

@@ -44,9 +44,19 @@ Para lanzarlo, abre Claude Code con el kit (`claude --plugin-dir ~/work/kit-agen
 `/kit-adrian-aws:orquestar` seguido de la tarea. Para parar después del diseño, empieza la tarea con «Modo solo
 diseño.». Una sesión abierta sin `--plugin-dir` no tiene el kit.
 
+El orquestador corre con el modelo de la sesión. Para gastar menos, lánzalo en Sonnet (en prueba desde el
+14 oct); el pensador y el revisor siguen en Opus porque lo fija cada agente:
+
+```bash
+claude --model sonnet --plugin-dir ~/work/kit-agentes
+```
+
+Si vas a tardar más de una hora en contestar al orquestador, escribe `/clear` y después
+`/kit-adrian-aws:orquestar continuar {slug}` con tu respuesta: retoma desde el registro con el contexto limpio.
+
 Todos los agentes piensan en la **seguridad y la escalabilidad** de lo que hacen aunque la tarea no lo pida: el
 pensador las analiza en el diseño, el implementador las aplica, el tester las prueba y el revisor bloquea los
-riesgos sin cubrir. El criterio está en `principios/principios-diseno.md`.
+riesgos sin cubrir. El criterio está en `principios/seguridad-escalabilidad.md`.
 
 ## Sirve para cualquier repo
 
@@ -80,7 +90,7 @@ en un repo de un cliente con GitLab y CDK en TypeScript, o en uno propio con Git
 | `skills/orquestar/scripts/metricas_sesion.py` | Exporta las métricas de la sesión (tiempos, mensajes, tokens, coste a precio de API) a `.agentes/metricas/`. |
 | `plantillas/incidencia.md` | Ficha de la incidencia de cada tarea y cómo se guarda en GitHub, GitLab, Jira o Linear. |
 | `ROADMAP.md` | Fases, pilotos y puntos de control hasta llevarlo a un cliente y a otros clientes. |
-| `principios/principios-diseno.md` | El criterio de diseño. Es lo que hace que los agentes diseñen como Adrián. |
+| `principios/` | El criterio de diseño, un fichero por tema (el índice está en `principios-diseno.md`). Es lo que hace que los agentes diseñen como Adrián. |
 | `skills/investigar` | Fase obligatoria antes de diseñar o programar: alternativas comparadas y documentación comprobada. |
 | `skills/disenar-arquitectura` | Propuesta de arquitectura con diagrama, coste y ADR. |
 | `skills/disenar-api` | Contrato de API: recursos, auth, errores, paginación. |
@@ -130,7 +140,7 @@ con lo que dirías tú.
 
 ## Pendiente
 
-1. Que Adrián resuelva los **[CONFIRMAR]** de `principios/principios-diseno.md`.
+1. Que Adrián resuelva los **[CONFIRMAR]** de los ficheros de `principios/`.
 2. Añadir sus fichas de buenas prácticas por servicio.
 3. Piloto en coop-investment-fund (Tarea A en marcha) y después en `garage-backend`.
 4. Diseñar cómo corren los agentes en GitLab CI para un cliente.

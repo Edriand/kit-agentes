@@ -5,8 +5,9 @@ description: Proponer la arquitectura AWS de un sistema o funcionalidad nueva a 
 
 # Diseñar arquitectura
 
-1. Si no se ha hecho ya, empieza por la skill `investigar`. Lee `principios/principios-diseno.md` del kit y el
-   `CLAUDE.md` y `docs/` del repo del cliente.
+1. Si no se ha hecho ya, empieza por la skill `investigar`. Lee los ficheros de `principios/` del kit que
+   toquen la tarea (el índice está en `principios/principios-diseno.md`) y el `CLAUDE.md` y `docs/` del repo
+   del cliente.
 2. Si faltan requisitos que cambian el diseño (volumen, quién llama a la API, datos sensibles, presupuesto,
    cuentas y entornos), pregúntalos antes de proponer. Si no son decisivos, elige un valor razonable y dilo.
 3. Consulta el MCP `aws-knowledge` para confirmar límites, precios y novedades de los servicios que propongas.
