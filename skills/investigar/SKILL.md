@@ -21,4 +21,4 @@ ni CDK hasta que Adrián apruebe el resultado de esta fase.
 7. Entrega todo en un documento corto y, cuando Adrián lo apruebe, conviértelo en ADR
    en el formato del repo (por defecto, `docs/adr/`).
 
-Aplica `principios/principios-diseno.md` del kit, en especial la sección 0.
+Aplica `principios/0-pensar-antes.md` del kit y los demás ficheros de `principios/` que toquen la tarea.

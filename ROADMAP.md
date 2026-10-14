@@ -65,6 +65,14 @@ mandan sobre las generales del kit.
       (13 oct) no sabe cuánto de los buenos resultados es del kit y cuánto de la suite de tests del backend.
 - [ ] **El kit como revisor de PR ajenas:** que `revisor` revise una PR de Claude (por ejemplo, el PR 10 de la
       película). En la #86 encontró un fallo en código de Claude que nadie había visto.
+- [x] **Menos consumo, grupo A** (14 oct, `kit-agentes-consumo/propuestas.md`): un implementador nuevo por
+      vuelta, informes de cada agente en fichero, principios partidos por tema y solo la sección del diseño que
+      toca, salidas cortas, esfuerzo por agente, retomar con `/clear` tras esperas largas y sin MCP en los
+      agentes que no lo usan.
+- [ ] **Menos consumo, grupo B, en prueba en la próxima tarea:** orquestador en Sonnet
+      (`claude --model sonnet --plugin-dir ...`), revisor sin repetir las suites largas y re-revisión sobre el
+      delta. Comparar coste por agente, contexto medio por llamada y calidad con los dos pilotos (sección 3 de
+      `propuestas.md`). Si la calidad baja, se quita lo que la baje.
 - [x] **Menos esperas:** en la #88, la mitad de la sesión fue esperar a Adrián. Decidido el 14 oct: los agentes
       siguen preguntando siempre que algo los bloquee.
 

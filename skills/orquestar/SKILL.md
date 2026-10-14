@@ -54,6 +54,14 @@ aprobación del diseño.
 Pasa a cada agente las reglas que le afectan: al implementador, rama, commits, autoría, comprobaciones y
 ficheros protegidos; al tester, las comprobaciones; al revisor, todas.
 
+Fija también qué tiene que leer cada agente, para que nadie lea documentos enteros que no necesita:
+
+- **Principios del kit:** `principios/seguridad-escalabilidad.md` siempre, y solo los ficheros de tema que
+  toque la tarea (`2-cdk.md`, `3-lambda.md`, `4-apis.md`, `5-datos.md`, `6-identidad-y-seguridad.md`). El
+  pensador lee además `0-pensar-antes.md`, y el documentador, `1-forma-de-trabajar.md`.
+- **Diseño del repo:** la sección que toca, con su ruta y su apartado (por ejemplo, «§4 de
+  `docs/diseno/fase6_agentes_llm.md`»), no el documento entero.
+
 ## Registro
 
 Crea el registro a partir de `plantillas/tarea.md` del kit en `.agentes/tareas/{AAAA-MM-DD}-{slug}.md` dentro
@@ -61,9 +69,13 @@ del repo, y añade `.agentes/` a `.git/info/exclude` para que no entre nunca en 
 `.gitignore` del repo. Si las reglas del repo piden el registro versionado (por ejemplo, en `docs/tareas/`),
 ponlo donde digan.
 
-Después de cada paso, añade lo que ha devuelto el agente (resumido; nunca lo borres ni lo reescribas) y
-actualiza el estado, la tabla de pasos y las métricas. Ese fichero es lo que Adrián lee para saber en qué punto
-está todo.
+Cada agente escribe su informe completo en `.agentes/tareas/{AAAA-MM-DD}-{slug}/NN-{agente}.md` (`NN` es el
+orden: `01-pensador.md`, `02-implementador.md`...) y te devuelve solo un resumen corto y la ruta. Dale la ruta
+al lanzarlo. Tú no copias informes: en el registro pones el resumen y el enlace.
+
+Después de cada paso, añade ese resumen al registro (nunca lo borres ni lo reescribas) y actualiza el estado,
+la tabla de pasos y las métricas. Ese fichero es lo que Adrián lee para saber en qué punto está todo, y lo que
+te permite continuar en una sesión nueva.
 
 ## Incidencia
 
@@ -116,6 +128,13 @@ Las métricas son internas: no van al repo, al PR ni a la incidencia más allá 
 - **Completo** (por defecto): todos los pasos.
 - **Solo diseño**: si Adrián pide parar después del diseño, terminas en el paso 3. Si más tarde dice que
   sigas, continúas en el paso 4 con el mismo registro.
+- **Continuar** (`continuar {slug}`): lee el registro de esa tarea y sigue en el paso donde se quedó, sin
+  repetir nada. Sirve para retomar en una sesión limpia.
+
+**Esperas largas.** Cada vez que pidas algo a Adrián (preguntas del pensador, aprobación del diseño, sí al push),
+deja antes el registro al día y añade al final del mensaje: «Si vas a tardar más de una hora en contestar,
+escribe `/clear` y después `/kit-adrian-aws:orquestar continuar {slug}` con tu respuesta». Tras una hora sin
+actividad, la caché del contexto caduca y volver a escribirlo entero cuesta más que empezar de cero.
 
 ## Flujo
 
@@ -132,15 +151,25 @@ Las métricas son internas: no van al repo, al PR ni a la incidencia más allá 
    - Si se implementa un diseño ya aprobado, no hace falta ADR; las desviaciones van a la descripción del PR.
    - Abre la incidencia de la tarea (ver «Incidencia»). En modo solo diseño, queda abierta con el estado
      «Diseño aprobado», y terminas exportando las métricas de la sesión.
-4. **Implementar.** Lanza `implementador` con el diseño y el plan aprobados y sus reglas. Guarda su resultado.
-5. **Probar.** Lanza `tester` con el diseño, el plan, la rama y las comprobaciones. Si encuentra fallos, vuelve
-   al paso 4.
-6. **Revisar.** Lanza `revisor` con el diseño, el plan, la rama, las reglas y el resultado del tester.
+4. **Implementar.** Lanza `implementador` con el plan, la sección del diseño que toca, sus reglas y sus
+   ficheros de principios. Guarda su resumen.
+   - **Un implementador nuevo en cada vuelta de arreglos**, con un brief corto: rama, último commit, hallazgos
+     que corregir y ficheros afectados. No continúes el anterior con `SendMessage`: conserva todo su historial
+     y cada llamada lo vuelve a leer. Solo puedes continuarlo si acaba de terminar y le falta algo pequeño de
+     la misma vuelta.
+5. **Probar.** Lanza `tester` con el plan, la sección del diseño, la rama y las comprobaciones. Si encuentra
+   fallos, vuelve al paso 4. Su informe dice sobre qué commit pasó la suite completa.
+6. **Revisar.** Lanza `revisor` con el plan, la sección del diseño, la rama, las reglas, sus ficheros de
+   principios y la ruta del informe del tester.
+   - **En prueba desde el 14 oct:** en una re-revisión tras arreglos, pásale el commit que ya revisó y los
+     hallazgos que se han arreglado, para que revise solo el delta. El revisor no repite las suites largas:
+     comprueba que el tester las pasó sobre el mismo commit.
    - `VEREDICTO: CAMBIOS` por implementación: vuelve al paso 4 con los hallazgos bloqueantes.
    - `VEREDICTO: CAMBIOS` por diseño: vuelve al paso 2 y después a la aprobación.
    - Como mucho **3 vueltas** de implementar, probar y revisar. Si no se aprueba en la tercera, para y
      explícale a Adrián qué está atascado.
-7. **Documentar.** Con `VEREDICTO: APROBADO`, lanza `documentador` sobre la misma rama.
+7. **Documentar.** Con `VEREDICTO: APROBADO`, lanza `documentador` sobre la misma rama. Si el repo tiene una
+   suite de aceptación larga, pide al `tester` que la pase una sola vez, sobre el commit final.
 8. **Plan de despliegue.** Solo si el cambio hay que desplegarlo: lanza `despliegue` y adjunta su plan. Si no,
    apunta en el registro que no aplica.
 9. **PR o MR.** Prepara el título y la descripción según las reglas, enséñaselos a Adrián y **pide su sí**
@@ -158,8 +187,9 @@ al final con lo hecho, el enlace al PR o MR y lo que queda.
 
 ## Reglas
 
-- Cada agente recibe solo lo que necesita: la petición, el diseño aprobado, el plan, la rama, sus reglas y los
-  hallazgos. No le pases conversaciones enteras.
+- Cada agente recibe solo lo que necesita: la petición, la sección del diseño que toca, el plan, la rama, sus
+  reglas, sus ficheros de principios y los hallazgos. No le pases conversaciones enteras ni informes copiados:
+  pásale la ruta del informe que tenga que leer.
 - Si dos agentes no se ponen de acuerdo, no decides tú: lo llevas a Adrián con las dos posturas.
 - Los agentes `seguridad`, `costes`, `novedades` e `incidencias` no forman parte de este flujo: se lanzan
   aparte (periódicos o bajo demanda) y lo que encuentren que haya que cambiar entra aquí como tarea nueva.
