@@ -64,6 +64,9 @@ Fija también qué tiene que leer cada agente, para que nadie lea documentos ent
 
 ## Registro
 
+Si la sesión se abrió con `lanzar.sh`, la variable `KIT_TAREA` tiene el nombre corto de la tarea: úsalo como
+`{slug}`, para que las métricas encuentren la telemetría de la tarea. Si no existe, elige tú el slug.
+
 Crea el registro a partir de `plantillas/tarea.md` del kit en `.agentes/tareas/{AAAA-MM-DD}-{slug}.md` dentro
 del repo, y añade `.agentes/` a `.git/info/exclude` para que no entre nunca en un commit sin tocar el
 `.gitignore` del repo. Si las reglas del repo piden el registro versionado (por ejemplo, en `docs/tareas/`),
@@ -113,6 +116,11 @@ skill desde la raíz del repo:
 ```bash
 python3 <carpeta de esta skill>/scripts/metricas_sesion.py --slug {slug}
 ```
+
+Con `KIT_TAREA` puesta puedes omitir `--slug`. Si la sesión se abrió con `lanzar.sh`, los tokens, el coste y el
+reparto por agente salen de la telemetría local, que es exacta y no necesita que Adrián salga con `/exit`; el
+informe lo dice con «Tokens y coste de la telemetría». Sin telemetría salen de las transcripciones, que se
+quedan cortas en la salida de los subagentes, y el informe avisa.
 
 Lee la transcripción de la sesión y de sus subagentes y escribe `.agentes/metricas/{fecha}-{slug}.md` y `.json`:
 duración total y tiempo activo, peticiones de Adrián y lo que tardó en contestar cada una, llamadas a la API y a

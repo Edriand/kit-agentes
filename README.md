@@ -40,15 +40,29 @@ Cada tarea queda además registrada en el gestor de incidencias del repo (GitHub
 defecto) con una ficha completa: urgencia, estimación y tiempo real, coste, etiquetas, recursos, documentos y
 personas implicadas. Se abre con el sí del diseño y se cierra con el merge.
 
-Para lanzarlo, abre Claude Code con el kit (`claude --plugin-dir ~/work/kit-agentes`) y escribe
-`/kit-adrian-aws:orquestar` seguido de la tarea. Para parar después del diseño, empieza la tarea con «Modo solo
-diseño.». Una sesión abierta sin `--plugin-dir` no tiene el kit.
-
-El orquestador corre con el modelo de la sesión. Para gastar menos, lánzalo en Sonnet (en prueba desde el
-14 oct); el pensador y el revisor siguen en Opus porque lo fija cada agente:
+Para lanzarlo, desde la raíz del repo abre Claude Code con el lanzador del kit y el nombre corto de la tarea
+(minúsculas, números y guiones), y escribe `/kit-adrian-aws:orquestar` seguido de la tarea. Para parar después
+del diseño, empieza la tarea con «Modo solo diseño.». Una sesión abierta sin el lanzador ni `--plugin-dir` no
+tiene el kit.
 
 ```bash
-claude --model sonnet --plugin-dir ~/work/kit-agentes
+~/work/kit-agentes/lanzar.sh research-debate
+# con un alias: alias kit='~/work/kit-agentes/lanzar.sh' y después kit research-debate
+```
+
+El lanzador abre `claude --plugin-dir` con el kit y enciende la telemetría local de la tarea: un receptor en tu
+equipo (solo escucha en 127.0.0.1) guarda en `~/.kit-agentes/telemetria/` el coste y los tokens exactos de cada
+llamada, subagentes incluidos, y borra antes los comandos, los parámetros, los prompts y el correo. Así las
+métricas salen exactas sin salir con `/exit` ni pasar el nombre de la tarea. Si el puerto 4318 lo usa otro
+servicio, avisa y sigue sin telemetría (otro puerto con `KIT_PUERTO_TELEMETRIA`). El receptor se queda en
+segundo plano para las siguientes sesiones; se para con `pkill -f receptor_telemetria.py`.
+
+El orquestador corre con el modelo de la sesión. Para gastar menos, lánzalo en Sonnet (en prueba desde el
+14 oct); el pensador y el revisor siguen en Opus porque lo fija cada agente. Las opciones de `claude` van
+detrás del nombre de la tarea:
+
+```bash
+~/work/kit-agentes/lanzar.sh research-debate --model sonnet
 ```
 
 Si vas a tardar más de una hora en contestar al orquestador, escribe `/clear` y después
@@ -91,7 +105,9 @@ en un repo de un cliente con GitLab y CDK en TypeScript, o en uno propio con Git
 | `skills/implementar-cdk` | Convenciones para implementar en CDK y Lambda. |
 | `ideas/catalogo-agentes.md` | Lista priorizada de agentes futuros. |
 | `plantillas/tarea.md` | Plantilla del registro de cada tarea, con sus reglas y métricas. |
-| `skills/orquestar/scripts/metricas_sesion.py` | Exporta las métricas de la sesión (tiempos, mensajes, tokens, coste a precio de API) a `.agentes/metricas/`. |
+| `lanzar.sh` | Abre Claude Code con el kit y la telemetría local de la tarea. |
+| `skills/orquestar/scripts/receptor_telemetria.py` | Receptor local de la telemetría (solo 127.0.0.1); guarda coste y tokens de cada llamada sin comandos, parámetros ni prompts. |
+| `skills/orquestar/scripts/metricas_sesion.py` | Exporta las métricas de la sesión (tiempos, mensajes, tokens, coste a precio de API) a `.agentes/metricas/`. Si hay telemetría de la tarea, tokens y coste salen de ahí. |
 | `plantillas/incidencia.md` | Ficha de la incidencia de cada tarea y cómo se guarda en GitHub, GitLab, Jira o Linear. |
 | `ROADMAP.md` | Fases, pilotos y puntos de control hasta llevarlo a un cliente y a otros clientes. |
 | `principios/` | El criterio de diseño, un fichero por tema (el índice está en `principios-diseno.md`). Es lo que hace que los agentes diseñen como Adrián. |

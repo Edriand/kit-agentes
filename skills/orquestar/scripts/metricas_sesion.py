@@ -5,7 +5,13 @@ Lee la transcripción (`~/.claude/projects/<repo>/<sesión>.jsonl` y las de sus 
 en Markdown y en JSON: tiempos, mensajes, herramientas, agentes, tokens por modelo y agente, y lo que habría
 costado a precio de API.
 
+Si la sesión se abrió con `lanzar.sh`, los tokens, el coste y el reparto por agente salen de la telemetría que
+guardó el receptor local (`~/.kit-agentes/telemetria`), que tiene la salida real de cada llamada, subagentes
+incluidos, y no depende de salir con `/exit`. Las transcripciones quedan para tiempos, mensajes y ficheros. El
+nombre de la tarea se toma de `KIT_TAREA`, que pone el lanzador.
+
 Uso:
+    python3 metricas_sesion.py                                # tarea de KIT_TAREA, sesión más reciente del repo
     python3 metricas_sesion.py --slug research-llm            # sesión más reciente del repo actual
     python3 metricas_sesion.py --sesion <id o ruta> --repo ~/work/coop-investment-fund --slug x
     python3 metricas_sesion.py --desde 2026-10-13 --slug x     # todas las sesiones del repo desde esa fecha
@@ -17,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import Counter, defaultdict
@@ -36,7 +43,10 @@ def leer_args() -> argparse.Namespace:
     p.add_argument("--repo", default=".", help="Directorio del repo donde se lanzó Claude Code (por defecto, el actual).")
     p.add_argument("--sesion", help="Id de la sesión o ruta al .jsonl. Por defecto, la más reciente del repo.")
     p.add_argument("--desde", help="Fecha AAAA-MM-DD: junta todas las sesiones del repo con actividad desde ese día.")
-    p.add_argument("--slug", default="sesion", help="Nombre corto de la tarea para los ficheros de salida.")
+    p.add_argument("--slug", default=os.environ.get("KIT_TAREA") or "sesion",
+                   help="Nombre corto de la tarea para los ficheros de salida (por defecto, KIT_TAREA).")
+    p.add_argument("--telemetria", default=os.environ.get("KIT_TELEMETRIA") or str(Path.home() / ".kit-agentes" / "telemetria"),
+                   help="Carpeta del receptor de telemetría. Si tiene eventos de la tarea, mandan sobre las transcripciones.")
     p.add_argument("--salida", help="Carpeta de salida. Por defecto, <repo>/.agentes/metricas.")
     p.add_argument("--precios", default=str(Path(__file__).with_name("precios.json")))
     p.add_argument("--projects", default=str(Path.home() / ".claude" / "projects"))
@@ -316,6 +326,75 @@ def analizar(principales: list[Path], precios: dict) -> dict:
     }
 
 
+def numero(x) -> float:
+    try:
+        return float(x)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def nombre_agente_telemetria(evento: dict) -> str:
+    if evento.get("agent.name"):
+        return evento["agent.name"]
+    origen = evento.get("query_source") or ""
+    if origen in ("sdk", "repl_main_thread", "main") or origen.startswith("repl_main_thread"):
+        return "principal"
+    return f"auxiliar ({origen or 'desconocido'})"
+
+
+def analizar_telemetria(carpeta: Path, tarea: str) -> dict | None:
+    """Tokens, coste y agentes de la tarea según los eventos del receptor local; None si no hay eventos."""
+    eventos = []
+    for ruta in sorted(carpeta.glob("*.jsonl")) if carpeta.is_dir() else []:
+        eventos += [e for e in leer_jsonl(ruta) if e.get("tarea.id") == tarea]
+    llamadas = {}
+    for e in eventos:
+        if e.get("event.name") == "api_request":
+            llamadas[e.get("request_id") or e.get("client_request_id") or id(e)] = e
+    if not llamadas:
+        return None
+
+    por_modelo: dict[str, dict] = defaultdict(lambda: {**uso_vacio(), "coste_api_usd": 0.0})
+    por_agente: dict[str, dict] = defaultdict(lambda: {**uso_vacio(), "coste_api_usd": 0.0})
+    esfuerzos: Counter = Counter()
+    for e in llamadas.values():
+        for destino in (por_modelo[modelo_base(e.get("model", ""))], por_agente[nombre_agente_telemetria(e)]):
+            destino["llamadas"] += 1
+            destino["entrada"] += int(numero(e.get("input_tokens")))
+            destino["salida"] += int(numero(e.get("output_tokens")))
+            destino["lectura_cache"] += int(numero(e.get("cache_read_tokens")))
+            # La telemetría no separa la caché de 5 min y la de 1 h; cost_usd ya la valora bien.
+            destino["escritura_cache_5m"] += int(numero(e.get("cache_creation_tokens")))
+            destino["coste_api_usd"] += numero(e.get("cost_usd"))
+        if e.get("effort"):
+            esfuerzos[e["effort"]] += 1
+    for grupo in (por_modelo, por_agente):
+        for uso in grupo.values():
+            uso["coste_api_usd"] = round(uso["coste_api_usd"], 4)
+
+    resultados = [e for e in eventos if e.get("event.name") == "tool_result"]
+    instancias = Counter(e.get("agent_type", "?") for e in eventos if e.get("event.name") == "subagent_completed")
+    total = uso_vacio()
+    for uso in por_modelo.values():
+        for k in total:
+            total[k] += uso[k]
+    entrada_total = total["entrada"] + total["lectura_cache"] + total["escritura_cache_5m"]
+    return {
+        "fuente_tokens": "telemetria",
+        "sesiones_telemetria": sorted({e["session.id"] for e in eventos if e.get("session.id")}),
+        "llamadas_api": total["llamadas"],
+        "tokens": total,
+        "ratio_cache": round(total["lectura_cache"] / entrada_total, 3) if entrada_total else None,
+        "por_modelo": dict(sorted(por_modelo.items())),
+        "por_agente": dict(sorted(por_agente.items())),
+        "coste_api_usd": round(sum(numero(e.get("cost_usd")) for e in llamadas.values()), 4),
+        "modelos_sin_precio": [],
+        "esfuerzo": dict(esfuerzos),
+        "errores_herramientas": sum(1 for e in resultados if str(e.get("success")).lower() == "false"),
+        "subagentes_terminados": dict(instancias.most_common()),
+    }
+
+
 def markdown(m: dict, slug: str) -> str:
     def n(x):
         return f"{x:,}".replace(",", ".") if isinstance(x, int) else str(x)
@@ -326,9 +405,18 @@ def markdown(m: dict, slug: str) -> str:
         for mod, u in m["por_modelo"].items()
     )
     filas_agente = "\n".join(
-        f"| {ag} | {n(u['llamadas'])} | {n(u['salida'])} | {n(u['lectura_cache'])} |" for ag, u in m["por_agente"].items()
+        f"| {ag} | {n(u['llamadas'])} | {n(u['salida'])} | {n(u['lectura_cache'])} | {u.get('coste_api_usd', '-')} |"
+        for ag, u in m["por_agente"].items()
     )
     cc = m["segun_claude_code"]
+    de_telemetria = m.get("fuente_tokens") == "telemetria"
+    fuente = (
+        "- Tokens y coste de la telemetría de Claude Code (salida real de cada llamada, subagentes incluidos); la "
+        "escritura de caché va sin separar 5 min y 1 h."
+        if de_telemetria else
+        "- Tokens de las transcripciones: la salida de cada mensaje es la que había al empezar la respuesta, así que "
+        "se queda corta. Lanza la sesión con `lanzar.sh` para tener la cifra exacta."
+    )
     linea_cc = (
         f"- Último resumen que guardó Claude Code (puede ir por detrás de los últimos mensajes): {cc['coste_usd']} USD, {cc['tiempo_api_s']} s de API, "
         f"{cc['tiempo_herramientas_s']} s de herramientas, +{cc['lineas_anadidas']} / -{cc['lineas_borradas']} líneas."
@@ -363,10 +451,11 @@ def markdown(m: dict, slug: str) -> str:
 {filas_modelo}
 
 - **Coste total a precio de API: {m['coste_api_usd']} USD.** Ratio de caché: {m['ratio_cache']} de la entrada se leyó de caché.
+{fuente}
 {linea_cc}{aviso}
 
-| Agente | Llamadas | Salida | Lectura de caché |
-|---|---|---|---|
+| Agente | Llamadas | Salida | Lectura de caché | USD |
+|---|---|---|---|---|
 {filas_agente}
 """
 
@@ -376,6 +465,11 @@ def main() -> None:
     principales = localizar_sesiones(args)
     precios = json.loads(Path(args.precios).read_text(encoding="utf-8"))
     m = analizar(principales, precios)
+    telemetria = analizar_telemetria(Path(args.telemetria).expanduser(), args.slug)
+    if telemetria:
+        m.update(telemetria)
+    else:
+        m["fuente_tokens"] = "transcripciones"
     m["generado"] = datetime.now(timezone.utc).isoformat()
 
     salida = Path(args.salida).expanduser() if args.salida else Path(args.repo).expanduser().resolve() / ".agentes" / "metricas"
