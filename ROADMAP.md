@@ -65,8 +65,8 @@ mandan sobre las generales del kit.
       (13 oct) no sabe cuánto de los buenos resultados es del kit y cuánto de la suite de tests del backend.
 - [ ] **El kit como revisor de PR ajenas:** que `revisor` revise una PR de Claude (por ejemplo, el PR 10 de la
       película). En la #86 encontró un fallo en código de Claude que nadie había visto.
-- [ ] **Menos esperas:** en la #88, la mitad de la sesión fue esperar a Adrián. Decidir si los agentes siguen
-      con su recomendación en las decisiones reversibles y las dejan apuntadas para el PR.
+- [x] **Menos esperas:** en la #88, la mitad de la sesión fue esperar a Adrián. Decidido el 14 oct: los agentes
+      siguen preguntando siempre que algo los bloquee.
 
 **Punto de control:** dos tareas seguidas sin correcciones de fondo de Adrián.
 
