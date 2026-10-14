@@ -73,6 +73,10 @@ Cada agente escribe su informe completo en `.agentes/tareas/{AAAA-MM-DD}-{slug}/
 orden: `01-pensador.md`, `02-implementador.md`...) y te devuelve solo un resumen corto y la ruta. Dale la ruta
 al lanzarlo. Tú no copias informes: en el registro pones el resumen y el enlace.
 
+Todo lo que haga falta para continuar en otra sesión va en `.agentes/tareas/{AAAA-MM-DD}-{slug}/`: planes,
+informes, la descripción del PR o MR, el plan de despliegue y la salida de `cdk diff`. Nunca en el scratchpad
+de la sesión ni en `/tmp`, que una sesión nueva no ve.
+
 Después de cada paso, añade ese resumen al registro (nunca lo borres ni lo reescribas) y actualiza el estado,
 la tabla de pasos y las métricas. Ese fichero es lo que Adrián lee para saber en qué punto está todo, y lo que
 te permite continuar en una sesión nueva.
