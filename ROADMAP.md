@@ -69,7 +69,10 @@ mandan sobre las generales del kit.
       vuelta, informes de cada agente en fichero, principios partidos por tema y solo la sección del diseño que
       toca, salidas cortas, esfuerzo por agente, retomar con `/clear` tras esperas largas y sin MCP en los
       agentes que no lo usan. Añadido A8 tras el `/usage` de Adrián (el documentador era el 17 %): recibe el
-      diff, toca solo lo afectado y lleva `effort: low`.
+      diff, toca solo lo afectado y lleva `effort: low`. Añadidos A9 y A10 tras la tarea de Dathum (PR 1 de
+      Match-on, 64,86 USD con el kit antiguo): caché de 1 hora (`experimental.cacheTtl`) en el implementador y
+      el tester, porque la de 5 minutos caducaba durante la suite de Jest; y la wiki se publica en una sola
+      llamada con un script que redacta el documentador, no el orquestador.
 - [ ] **Menos consumo, grupo B, en prueba en la próxima tarea:** orquestador en Sonnet
       (`claude --model sonnet --plugin-dir ...`), revisor sin repetir las suites largas y re-revisión sobre el
       delta. Comparar coste por agente, contexto medio por llamada y calidad con los dos pilotos (sección 3 de

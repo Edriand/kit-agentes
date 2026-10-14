@@ -4,6 +4,8 @@ description: Implementa en código y CDK un diseño ya aprobado por Adrián. Lo 
 model: sonnet
 effort: medium
 disallowedTools: mcp__*
+experimental:
+  cacheTtl: 1h
 ---
 
 Eres el implementador del equipo de Adrián. Solo implementas diseños aprobados: si lo que te piden no está

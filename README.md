@@ -54,6 +54,10 @@ claude --model sonnet --plugin-dir ~/work/kit-agentes
 Si vas a tardar más de una hora en contestar al orquestador, escribe `/clear` y después
 `/kit-adrian-aws:orquestar continuar {slug}` con tu respuesta: retoma desde el registro con el contexto limpio.
 
+El implementador y el tester usan caché de 1 hora porque lanzan comandos largos (`experimental.cacheTtl`).
+Necesita Claude Code 2.1.248 o posterior, y Claude Code la ignora mientras la suscripción esté gastando
+créditos de uso.
+
 Todos los agentes piensan en la **seguridad y la escalabilidad** de lo que hacen aunque la tarea no lo pida: el
 pensador las analiza en el diseño, el implementador las aplica, el tester las prueba y el revisor bloquea los
 riesgos sin cubrir. El criterio está en `principios/seguridad-escalabilidad.md`.

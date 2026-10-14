@@ -173,7 +173,8 @@ actividad, la caché del contexto caduca y volver a escribirlo entero cuesta má
    - Como mucho **3 vueltas** de implementar, probar y revisar. Si no se aprueba en la tercera, para y
      explícale a Adrián qué está atascado.
 7. **Documentar.** Con `VEREDICTO: APROBADO`, lanza `documentador` sobre la misma rama, con la lista de
-   ficheros tocados (`git diff --stat` contra la base), el diff y los documentos que crees que hay que tocar. Si el repo tiene una
+   ficheros tocados (`git diff --stat` contra la base), el diff y los documentos que crees que hay que tocar.
+   Tú no redactas documentación ni páginas de wiki: las escribe y las publica el documentador. Si el repo tiene una
    suite de aceptación larga, pide al `tester` que la pase una sola vez, sobre el commit final.
 8. **Plan de despliegue.** Solo si el cambio hay que desplegarlo: lanza `despliegue` y adjunta su plan. Si no,
    apunta en el registro que no aplica.

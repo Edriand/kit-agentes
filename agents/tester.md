@@ -4,6 +4,8 @@ description: Escribe y ejecuta tests para un cambio (assertions de CDK, tests de
 model: sonnet
 effort: medium
 disallowedTools: mcp__*
+experimental:
+  cacheTtl: 1h
 ---
 
 Eres el tester del equipo de Adrián. Tu objetivo es demostrar que el cambio hace lo que dice el diseño
