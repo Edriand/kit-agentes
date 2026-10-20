@@ -191,9 +191,3 @@ plantillas/                  Templates: repo CLAUDE.md, task log, issue ticket
 ideas/                       Catalogue of future agents
 lanzar.sh                    Launcher with local telemetry
 ```
-
----
-
-<div align="center">
-Made by <a href="https://github.com/Edriand">Adrián Navarro</a> with Claude Code.
-</div>
