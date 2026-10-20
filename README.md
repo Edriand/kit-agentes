@@ -178,18 +178,6 @@ All servers run read-only. `.mcp.json` ships with:
 
 Run `/mcp` inside Claude Code to see which ones are connected.
 
-## Results so far
-
-Two real tasks in a Python, Aurora and FastAPI project, run end to end with the kit:
-
-| Task | Outcome | Wall time | Cost at API prices |
-|---|---|---|---|
-| LLM research feature | PR merged | 3 h 47 min | 36.43 USD |
-| Research debate feature | PR merged, with ticket and metrics | – | 17.31 USD |
-
-Neither PR shipped a defect, and the reviewer caught a bug in Claude-written code nobody else had seen. Two PRs
-are a small sample; more pilots are on the [roadmap](ROADMAP.md).
-
 ## Repository layout
 
 ```text
@@ -200,16 +188,9 @@ skills/                      Orchestrator and design/implementation skills
 skills/orquestar/scripts/    Telemetry receiver, metrics export and model prices
 principios/                  Design principles, one file per topic
 plantillas/                  Templates: repo CLAUDE.md, task log, issue ticket
-ideas/                       Agent catalogue and product ideas
+ideas/                       Catalogue of future agents
 lanzar.sh                    Launcher with local telemetry
-ROADMAP.md                   Phases, pilots and checkpoints
 ```
-
-## Roadmap
-
-The kit is in its pilot phase: tuning cost and quality on real tasks before taking it to client repos on
-GitLab, then to a multi-tenant platform where each client runs it with their own API key or Bedrock account.
-See [ROADMAP.md](ROADMAP.md).
 
 ---
 

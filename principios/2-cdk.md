@@ -2,8 +2,8 @@
 
 - **Todo en CDK**, nada a mano en consola. Excepción documentada: valores de secretos y recursos de terceros
   (ej. precios de Stripe) que se cargan después del despliegue y se referencian por configuración.
-- **TypeScript** para proyectos serverless de API; **Python** cuando el dominio es Python. **[CONFIRMAR]** ¿En
-  Dathum siempre TypeScript?
+- **TypeScript** para proyectos serverless de API; **Python** cuando el dominio es Python. **[CONFIRMAR]** ¿Hay
+  clientes que pidan siempre TypeScript?
 - **Configuración por entorno en un fichero tipado** (`config/environments.ts`: cuenta, región, orígenes
   permitidos, dominios). El entorno se elige con contexto: `cdk deploy -c env=pro`.
 - **Región por defecto `eu-west-1`.**
