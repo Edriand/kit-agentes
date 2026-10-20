@@ -1,166 +1,218 @@
-# Kit de agentes de Adrián (v0.5)
+<div align="center">
 
-Plugin de Claude Code para diseñar e implementar infraestructura AWS serverless con el criterio de Adrián.
-Los agentes investigan antes de construir, proponen, y Adrián revisa y aprueba.
+# kit-agentes
 
-## Cómo funciona
+**A team of Claude Code agents that designs, builds and reviews AWS serverless infrastructure: research first, a human approves, then it ships.**
 
-```
-Adrián pide algo
-   │
-   ▼
-pensador ──► investigación, alternativas y plan
-   │
-   ▼
-APROBACIÓN DE ADRIÁN (diseño) ──► ADR
-   │
-   ▼
-implementador ──► tester ──► revisor ──┐
-   ▲                                   │ cambios (máx. 3 vueltas;
-   └───────────────────────────────────┘ si es de diseño, vuelve al pensador)
-   │ aprobado
-   ▼
-documentador ──► despliegue (plan, si aplica) ──► PR o MR (con el sí de Adrián)
-   │
-   ▼
-APROBACIÓN DE ADRIÁN (merge y despliegue)
-   │
-   ▼
-entrega (checklist) ──► comunicacion (borrador de email) ──► video (opcional)
-```
+![version](https://img.shields.io/badge/version-0.6.0-blue)
+![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)
+![AWS serverless](https://img.shields.io/badge/AWS-serverless-FF9900?logo=amazonaws&logoColor=white)
+![CDK](https://img.shields.io/badge/IaC-AWS%20CDK-232F3E)
 
-Fuera del flujo, periódicos o bajo demanda: `seguridad`, `costes`, `novedades` e `incidencias`. Lo que
-encuentren que haya que cambiar entra al orquestador como tarea nueva.
+</div>
 
-El orquestador lleva el registro de cada paso en `.agentes/tareas/{fecha}-{tarea}.md` dentro del repo, excluido
-de git con `.git/info/exclude` para que no acabe en ningún commit (salvo que el repo pida versionarlo). Ningún
-agente hace push sin el sí de Adrián, ni fusiona, ni despliega.
+---
 
-Cada tarea queda además registrada en el gestor de incidencias del repo (GitHub Issues o GitLab Issues por
-defecto) con una ficha completa: urgencia, estimación y tiempo real, coste, etiquetas, recursos, documentos y
-personas implicadas. Se abre con el sí del diseño y se cierra con el merge.
+`kit-agentes` is a [Claude Code plugin](https://docs.claude.com/en/docs/claude-code/plugins) (`kit-adrian-aws`)
+that turns a single request into a reviewed pull request. An orchestrator hands the work to specialised agents
+(a thinker, an implementer, a tester, a reviewer, a documenter and more) and stops at two points for a human
+decision: **the design** and **the merge**. Everything in between is planned, coded, tested, reviewed,
+documented and measured by the agents.
 
-Para lanzarlo, desde la raíz del repo abre Claude Code con el lanzador del kit y el nombre corto de la tarea
-(minúsculas, números y guiones), y escribe `/kit-adrian-aws:orquestar` seguido de la tarea. Para parar después
-del diseño, empieza la tarea con «Modo solo diseño.». Una sesión abierta sin el lanzador ni `--plugin-dir` no
-tiene el kit.
+> The AI does the work. A human reviews it and helps it think.
 
-```bash
-~/work/kit-agentes/lanzar.sh research-debate
-# con un alias: alias kit='~/work/kit-agentes/lanzar.sh' y después kit research-debate
-```
+## Why it is different
 
-El lanzador abre `claude --plugin-dir` con el kit y enciende la telemetría local de la tarea: un receptor en tu
-equipo (solo escucha en 127.0.0.1) guarda en `~/.kit-agentes/telemetria/` el coste y los tokens exactos de cada
-llamada, subagentes incluidos, y borra antes los comandos, los parámetros, los prompts y el correo. Así las
-métricas salen exactas sin salir con `/exit` ni pasar el nombre de la tarea. Si el puerto 4318 lo usa otro
-servicio, avisa y sigue sin telemetría (otro puerto con `KIT_PUERTO_TELEMETRIA`). El receptor se queda en
-segundo plano para las siguientes sesiones; se para con `pkill -f receptor_telemetria.py`.
+- 🧠 **Thinks before it builds.** Every task starts with research: alternatives compared, documentation
+  checked, costs estimated, and a design written as an ADR before a line of code exists.
+- 🙋 **Two approvals, no surprises.** No agent pushes, merges or deploys on its own. When something blocks
+  them, they stop and ask.
+- 🔁 **Built-in review loop.** Implementer, tester and reviewer iterate up to three rounds; a design problem
+  goes back to the thinker instead of being patched over.
+- 🔐 **Security and scalability by default.** Every agent weighs them even when the task does not ask: the
+  thinker designs for them, the implementer applies them, the tester probes them and the reviewer blocks
+  uncovered risks.
+- 🧩 **Works in any repo.** Nothing client-specific lives in the kit. Each task's rules come from the request,
+  the repo's `CLAUDE.md` or `AGENTS.md`, and its git history, so the same kit works on GitLab with TypeScript
+  CDK or on GitHub with Python.
+- 📊 **Every task is measured.** Time, messages, tokens and API-equivalent cost per agent, captured exactly by
+  a local telemetry receiver, plus a full ticket in the repo's issue tracker.
 
-El orquestador corre con el modelo de la sesión. Para gastar menos, lánzalo en Sonnet (en prueba desde el
-14 oct); el pensador y el revisor siguen en Opus porque lo fija cada agente. Las opciones de `claude` van
-detrás del nombre de la tarea:
+## How it works
 
-```bash
-~/work/kit-agentes/lanzar.sh research-debate --model sonnet
+```mermaid
+flowchart TD
+    A([Request]) --> P[pensador<br/>research, alternatives, plan]
+    P --> D{{Human approves design}}
+    D -->|ADR + issue| I[implementador]
+    I --> T[tester]
+    T --> R[revisor]
+    R -->|changes, max 3 rounds| I
+    R -.->|design problem| P
+    R -->|approved| Doc[documentador]
+    Doc --> Dep[despliegue<br/>deploy and rollback plan]
+    Dep --> PR[PR / MR]
+    PR --> M{{Human approves merge and deploy}}
+    M --> E[entrega<br/>final checklist]
+    E --> C[comunicacion<br/>client email draft]
+    E -.-> V[video<br/>optional script]
 ```
 
-Si vas a tardar más de una hora en contestar al orquestador, escribe `/clear` y después
-`/kit-adrian-aws:orquestar continuar {slug}` con tu respuesta: retoma desde el registro con el contexto limpio.
+Outside the main flow, on demand or on a schedule: `seguridad` (security audit), `costes` (cost report),
+`novedades` (AWS and AI news for the client's stack) and `incidencias` (error and alarm diagnosis). Anything
+they find that needs changing goes back to the orchestrator as a new task.
 
-El implementador y el tester usan caché de 1 hora porque lanzan comandos largos (`experimental.cacheTtl`).
-Necesita Claude Code 2.1.248 o posterior, y Claude Code la ignora mientras la suscripción esté gastando
-créditos de uso.
+The orchestrator keeps a log of every step in `.agentes/tareas/` inside the repo, excluded from git through
+`.git/info/exclude` so it never lands in a commit unless the repo asks for it.
 
-Todos los agentes piensan en la **seguridad y la escalabilidad** de lo que hacen aunque la tarea no lo pida: el
-pensador las analiza en el diseño, el implementador las aplica, el tester las prueba y el revisor bloquea los
-riesgos sin cubrir. El criterio está en `principios/seguridad-escalabilidad.md`.
+## The team
 
-## Sirve para cualquier repo
-
-El kit no lleva nada de un cliente concreto. Al empezar cada tarea, el orquestador fija las **reglas de la
-tarea** (rama, formato y autor de los commits, autoría, cuándo se hace push, comprobaciones, plantilla del PR o
-MR, alcance y ficheros generados) a partir de, por este orden: el encargo, el `CLAUDE.md` o `AGENTS.md` del repo,
-el historial de git y, si nada lo dice, los valores por defecto de `skills/orquestar`. Así el mismo kit trabaja
-en un repo de Dathum con GitLab y CDK en TypeScript, o en uno propio con GitHub y Python.
-
-## Qué contiene
-
-| Ruta | Para qué |
-|---|---|
-| `skills/orquestar` | El orquestador: reparte el trabajo, pide las aprobaciones y lleva el registro. |
-| `agents/pensador.md` | Investiga, compara alternativas y propone diseño y plan. No escribe código. |
-| `agents/implementador.md` | Implementa el diseño aprobado en una rama, con las comprobaciones del repo. No hace push ni despliega. |
-| `agents/tester.md` | Escribe y ejecuta tests de CDK, Lambdas y contrato de la API. |
-| `agents/revisor.md` | Revisa contra el diseño y los principios, y da un veredicto. No modifica nada. |
-| `agents/documentador.md` | Mantiene `docs/` y `CLAUDE.md` al día con el cambio. |
-| `agents/despliegue.md` | Prepara el plan de despliegue y rollback. No despliega. |
-| `agents/entrega.md` | Checklist final: merge, pipeline, docs, ADR y registro. |
-| `agents/comunicacion.md` | Borradores de email para el cliente. No envía nada. |
-| `agents/video.md` | Guion por escenas y diagramas para un vídeo del cambio. |
-| `agents/seguridad.md` | Auditoría de IAM, Cognito, WAF, S3, API y secretos (solo lectura). |
-| `agents/costes.md` | Informe de costes por etiquetas, anomalías y ahorros (solo lectura). |
-| `agents/novedades.md` | Novedades de AWS e IA filtradas por el stack del cliente. |
-| `agents/incidencias.md` | Diagnóstico de errores y alarmas (solo lectura). |
-| `skills/implementar-cdk` | Convenciones para implementar en CDK y Lambda. |
-| `ideas/catalogo-agentes.md` | Lista priorizada de agentes futuros. |
-| `plantillas/tarea.md` | Plantilla del registro de cada tarea, con sus reglas y métricas. |
-| `lanzar.sh` | Abre Claude Code con el kit y la telemetría local de la tarea. |
-| `skills/orquestar/scripts/receptor_telemetria.py` | Receptor local de la telemetría (solo 127.0.0.1); guarda coste y tokens de cada llamada sin comandos, parámetros ni prompts. |
-| `skills/orquestar/scripts/metricas_sesion.py` | Exporta las métricas de la sesión (tiempos, mensajes, tokens, coste a precio de API) a `.agentes/metricas/`. Si hay telemetría de la tarea, tokens y coste salen de ahí. |
-| `plantillas/incidencia.md` | Ficha de la incidencia de cada tarea y cómo se guarda en GitHub, GitLab, Jira o Linear. |
-| `ROADMAP.md` | Fases, pilotos y puntos de control hasta llevarlo a Dathum y a otros clientes. |
-| `principios/` | El criterio de diseño, un fichero por tema (el índice está en `principios-diseno.md`). Es lo que hace que los agentes diseñen como Adrián. |
-| `skills/investigar` | Fase obligatoria antes de diseñar o programar: alternativas comparadas y documentación comprobada. |
-| `skills/disenar-arquitectura` | Propuesta de arquitectura con diagrama, coste y ADR. |
-| `skills/disenar-api` | Contrato de API: recursos, auth, errores, paginación. |
-| `skills/modelar-dynamodb` | Modelo de datos a partir de patrones de acceso. |
-| `skills/revisar-cdk` | Revisión de stacks o merge requests de infraestructura. |
-| `plantillas/CLAUDE.md` | Plantilla para el `CLAUDE.md` de cada repo de cliente. |
-| `.mcp.json` | Servidores MCP de AWS (todos en solo lectura). |
-| `.claude-plugin/plugin.json` | Manifiesto del plugin. |
-
-## Servidores MCP
-
-| Servidor | Para qué | Credenciales |
+| Agent | Model | Role |
 |---|---|---|
-| `aws-knowledge` | Documentación, blogs, arquitecturas de referencia y Well-Architected al día | No necesita |
-| `aws-iac` | Buenas prácticas de CDK, ejemplos de constructs, validación de plantillas | Perfil AWS |
-| `aws-serverless` | Lambda, API Gateway y SAM (solo lectura por defecto) | Perfil AWS |
-| `dynamodb` | Asistente de modelado y validación de modelos (`DDB-MCP-READONLY=true`) | Perfil AWS |
-| `iam` | Consulta de usuarios, roles y políticas (solo lectura por defecto; nunca pasar `--allow-write`) | Perfil AWS |
-| `aws-pricing` | Estimación de costes de un diseño | Perfil AWS |
+| `pensador` | Opus | Researches, compares alternatives, proposes design and plan. Never writes code. |
+| `implementador` | Sonnet | Implements the approved design on a branch and runs the repo's checks. No push, no deploy. |
+| `tester` | Sonnet | Writes and runs CDK, Lambda and API contract tests. |
+| `revisor` | Opus | Reviews against the design and the principles and gives a verdict. Changes nothing. |
+| `documentador` | Sonnet | Updates only the docs and `CLAUDE.md` sections the change affects. |
+| `despliegue` | Sonnet | Prepares the deployment and rollback plan. Does not deploy. |
+| `entrega` | Haiku | Final checklist: merge, pipeline, docs, ADR and log. |
+| `comunicacion` | Sonnet | Drafts the email for the client. Sends nothing. |
+| `video` | Sonnet | Scene-by-scene script and diagrams for a video of the change. |
+| `seguridad` | Opus | Read-only audit of IAM, Cognito, WAF, S3, APIs and secrets. |
+| `costes` | Sonnet | Read-only cost report by tag, anomalies and savings. |
+| `novedades` | Sonnet | AWS and AI news filtered by the client's stack. |
+| `incidencias` | Opus | Read-only diagnosis of errors and alarms. |
 
-Requisitos: `uv` instalado (`brew install uv`) y un perfil de AWS con permisos de **solo lectura**. El perfil se
-toma de `AWS_PROFILE`; si no está definido, usa `default`.
+Each agent sets its own model and effort, so the expensive models only go where judgement matters.
 
-No incluye todavía el **AWS MCP Server** (en preview, consulta la cuenta real con auditoría en CloudTrail) ni
-GitLab. Se añadirán cuando se defina el rol de solo lectura en la cuenta de Dathum.
+## Quick start
 
-## Probarlo en local
+**Requirements:** [Claude Code](https://docs.claude.com/en/docs/claude-code) 2.1.248 or later,
+[`uv`](https://docs.astral.sh/uv/) (`brew install uv`), Python 3, and an AWS profile with **read-only**
+permissions (taken from `AWS_PROFILE`, `default` otherwise).
 
 ```bash
-# Desde un repo de prueba
-claude --plugin-dir /ruta/a/kit-agentes
+git clone https://github.com/Edriand/kit-agentes ~/work/kit-agentes
+
+# From the root of the repo you want to work on, launch with a short task name
+~/work/kit-agentes/lanzar.sh add-orders-api
 ```
 
-Claude Code añade por defecto un trailer `Co-Authored-By` a los commits y una línea a los PR. Como el kit no
-firma en nombre de nadie, desactívalo en el `.claude/settings.local.json` del repo (o en `~/.claude/settings.json`
-para todos):
+Then, inside Claude Code:
+
+```text
+/kit-adrian-aws:orquestar Add a paginated GET /orders endpoint backed by the existing table.
+```
+
+- Start the request with `Modo solo diseño.` to stop after the design.
+- Waiting more than an hour to answer? Run `/clear`, then `/kit-adrian-aws:orquestar continuar {slug}` with your
+  answer. It resumes from the log with a clean context.
+- Any `claude` option goes after the task name, for example `lanzar.sh add-orders-api --model sonnet` to run the
+  orchestrator on Sonnet.
+- A session opened without the launcher or `--plugin-dir` does not have the kit.
+
+Claude Code adds a `Co-Authored-By` trailer to commits and a line to PRs by default. The kit signs on nobody's
+behalf, so turn it off in the repo's `.claude/settings.local.json` (or `~/.claude/settings.json` for all repos):
 
 ```json
 { "attribution": { "commit": "", "pr": "", "sessionUrl": false } }
 ```
 
-Dentro de la sesión, `/mcp` muestra los servidores conectados y las skills se activan solas cuando pides
-diseñar una arquitectura, una API o un modelo de datos, o revisar CDK.
+## Exact metrics with local telemetry
 
-Prueba sugerida: en `garage-backend`, pedir "revisa el stack con la skill revisar-cdk" y comparar el resultado
-con lo que dirías tú.
+`lanzar.sh` opens `claude --plugin-dir` with the kit and starts a telemetry receiver on your machine. It only
+listens on `127.0.0.1:4318`, stores the exact cost and tokens of every call (subagents included) in
+`~/.kit-agentes/telemetria/`, and strips commands, parameters, prompts and email before writing anything.
 
-## Pendiente
+At the end of each task, `metricas_sesion.py` exports time, messages, tokens and API-equivalent cost per model
+and per agent to `.agentes/metricas/`. No `/exit` and no manual task name needed.
 
-1. Que Adrián resuelva los **[CONFIRMAR]** de los ficheros de `principios/`.
-2. Añadir sus fichas de buenas prácticas por servicio.
-3. Piloto en coop-investment-fund (Tarea A en marcha) y después en `garage-backend`.
-4. Diseñar cómo corren los agentes en GitLab CI para Dathum.
+- If port 4318 is taken by another collector, the launcher warns and carries on without telemetry. Use
+  `KIT_PUERTO_TELEMETRIA` to pick another port.
+- The receiver stays in the background for later sessions. Stop it with `pkill -f receptor_telemetria.py`.
+
+## Defaults the kit enforces
+
+Unless the request or the repo says otherwise:
+
+- Conventional Commits in English and branches named `{type}/{slug}`.
+- A moving base branch is brought in with merge, never rebase or force-push. Merges, tags and deploys are left to the human.
+- Code and repository docs in English.
+- Push and PR only after the human says yes.
+- Every task gets a ticket in the repo's tracker (GitHub Issues or GitLab Issues) with urgency, estimated vs.
+  real time and cost, labels, resources, documents and people. It opens with the design approval and closes
+  with the merge.
+- Agents that wait on long commands (`implementador`, `tester`) use a one-hour prompt cache.
+
+## Design principles
+
+`principios/` holds the design criteria the agents follow, one file per topic so each agent reads only what it
+needs: thinking before building, way of working, CDK, Lambda, APIs, data, identity and security, and security
+and scalability. The index is [`principios/principios-diseno.md`](principios/principios-diseno.md). A repo's own
+`CLAUDE.md` always wins over the kit's general rules.
+
+The skills turn those principles into repeatable steps:
+
+| Skill | Purpose |
+|---|---|
+| `orquestar` | The orchestrator: assigns work, asks for approvals and keeps the log. |
+| `investigar` | Mandatory research phase: compared alternatives and verified documentation. |
+| `disenar-arquitectura` | Architecture proposal with diagram, cost and ADR. |
+| `disenar-api` | API contract: resources, auth, errors, pagination. |
+| `modelar-dynamodb` | Data model from access patterns. |
+| `implementar-cdk` | Conventions for CDK and Lambda implementation. |
+| `revisar-cdk` | Review of infrastructure stacks or merge requests. |
+
+## AWS MCP servers
+
+All servers run read-only. `.mcp.json` ships with:
+
+| Server | Use | Credentials |
+|---|---|---|
+| `aws-knowledge` | Up-to-date docs, blogs, reference architectures, Well-Architected | None |
+| `aws-iac` | CDK best practices, construct examples, template validation | AWS profile |
+| `aws-serverless` | Lambda, API Gateway and SAM | AWS profile |
+| `dynamodb` | Data modelling assistant and model validation (`DDB-MCP-READONLY=true`) | AWS profile |
+| `iam` | Users, roles and policies (read-only by default; never pass `--allow-write`) | AWS profile |
+| `aws-pricing` | Cost estimate of a design | AWS profile |
+
+Run `/mcp` inside Claude Code to see which ones are connected.
+
+## Results so far
+
+Two real tasks in a Python, Aurora and FastAPI project, run end to end with the kit:
+
+| Task | Outcome | Wall time | Cost at API prices |
+|---|---|---|---|
+| LLM research feature | PR merged | 3 h 47 min | 36.43 USD |
+| Research debate feature | PR merged, with ticket and metrics | – | 17.31 USD |
+
+Neither PR shipped a defect, and the reviewer caught a bug in Claude-written code nobody else had seen. Two PRs
+are a small sample; more pilots are on the [roadmap](ROADMAP.md).
+
+## Repository layout
+
+```text
+.claude-plugin/plugin.json   Plugin manifest (name, version)
+.mcp.json                    Read-only AWS MCP servers
+agents/                      The 13 agents
+skills/                      Orchestrator and design/implementation skills
+skills/orquestar/scripts/    Telemetry receiver, metrics export and model prices
+principios/                  Design principles, one file per topic
+plantillas/                  Templates: repo CLAUDE.md, task log, issue ticket
+ideas/                       Agent catalogue and product ideas
+lanzar.sh                    Launcher with local telemetry
+ROADMAP.md                   Phases, pilots and checkpoints
+```
+
+## Roadmap
+
+The kit is in its pilot phase: tuning cost and quality on real tasks before taking it to client repos on
+GitLab, then to a multi-tenant platform where each client runs it with their own API key or Bedrock account.
+See [ROADMAP.md](ROADMAP.md).
+
+---
+
+<div align="center">
+Made by <a href="https://github.com/Edriand">Adrián Navarro</a> with Claude Code.
+</div>

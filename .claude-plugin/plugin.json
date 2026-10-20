@@ -1,6 +1,6 @@
 {
   "name": "kit-adrian-aws",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Agentes de diseño e implementación de infraestructura AWS serverless con el criterio de Adrián Navarro: arquitectura, APIs, modelado de datos y CDK.",
   "author": { "name": "Adrián Navarro" }
 }
