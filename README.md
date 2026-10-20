@@ -188,16 +188,9 @@ skills/                      Orchestrator and design/implementation skills
 skills/orquestar/scripts/    Telemetry receiver, metrics export and model prices
 principios/                  Design principles, one file per topic
 plantillas/                  Templates: repo CLAUDE.md, task log, issue ticket
-ideas/                       Agent catalogue and product ideas
+ideas/                       Catalogue of future agents
 lanzar.sh                    Launcher with local telemetry
-ROADMAP.md                   Phases, pilots and checkpoints
 ```
-
-## Roadmap
-
-The kit is in its pilot phase: tuning cost and quality on real tasks before taking it to client repos on
-GitLab, then to a multi-tenant platform where each client runs it with their own API key or Bedrock account.
-See [ROADMAP.md](ROADMAP.md).
 
 ---
 
